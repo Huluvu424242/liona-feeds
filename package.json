@@ -1,0 +1,31 @@
+{
+  "name": "@huluvu424242/liona-feeds",
+  "version": "1.0.0",
+  "description": "Modul to realize an REST endpoint to receive news feed data",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Huluvu424242/liona-feeds.git"
+  },
+  "keywords": [
+    "liona-news",
+    "news-feed",
+    "rest-endpoint"
+  ],
+  "author": "Huluvu424242 (Thomas Schubert)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Huluvu424242/liona-feeds/issues"
+  },
+  "homepage": "https://github.com/Huluvu424242/liona-feeds#readme",
+  "dependencies": {
+    "rxjs": "6.6.3"
+  },
+  "devDependencies": {
+    "typescript": "4.1.5"
+  }
+}
