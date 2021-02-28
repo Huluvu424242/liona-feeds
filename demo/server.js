@@ -12,5 +12,7 @@ express()
 
 
 const getNewsFeed = () => {
-    return feeder.getFeed("https://www.zdf.de/rss/zdf/nachrichten").toPromise();
+    return feeder.getFeed("https://www.zdf.de/rss/zdf/nachrichten").subscribe(
+        value => console.log(value)
+    );
 };
