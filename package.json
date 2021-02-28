@@ -10,6 +10,7 @@
   ],
   "scripts": {
     "build": "npx tsc -p tsconfig.json && npx tsc -p tsconfig-cjs.json",
+    "start": "node demo/server.js",
     "prepublish": "npm run build"
   },
   "repository": {
