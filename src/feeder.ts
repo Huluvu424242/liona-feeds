@@ -8,6 +8,7 @@ import {from, Observable} from "rxjs";
  * @Return {string}
  */
 export const getFeed = (queryUrl: string): Observable<Feed> => {
+    console.info('###url: '+queryUrl);
     return from(loadFeedData(queryUrl));
 }
 
