@@ -1,5 +1,5 @@
 import express from 'express';
-import * as feeder from '../dist/lib/index'
+import  {Feeder} from '../dist/cjs/index'
 
 const path = require('path');
 const PORT = process.env.PORT || 5000;
@@ -13,7 +13,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.listen(5000);
 
 const getNewsFeed = () => {
-    return feeder.getFeed("https://www.zdf.de/rss/zdf/nachrichten").toPromise();
+    return Feeder.getFeed("https://www.zdf.de/rss/zdf/nachrichten").toPromise();
 };
 
 //
