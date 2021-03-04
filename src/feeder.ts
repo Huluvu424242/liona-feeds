@@ -15,6 +15,7 @@ class Feeder {
 
 
     public getFeedData = (url: string): Feed => {
+        console.log("Anfrage: "+url);
         const urlHash = objectHash.sha1(url);
         if (this.feedUrls.has(urlHash)) {
             const feedData: UrlMetaData = this.feedUrls.get(urlHash) as UrlMetaData;
