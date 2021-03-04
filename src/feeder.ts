@@ -1,39 +1,58 @@
 import FeedMe, {Feed} from "feedme";
-import {from, Observable} from "rxjs";
-import axios from "axios";
+import {from, Observable, Subscription} from "rxjs";
+import * as objectHash from "object-hash";
+import axios, {AxiosResponse} from "axios";
+
+interface UrlMetaData {
+    url: string;
+    data: Feed;
+    subscription: Subscription;
+}
+
+class Feeder {
+
+    protected feedUrls: Map<string, UrlMetaData> = new Map();
 
 
-export const getNewsFeed = (): string => {
-    console.log("fech begin");
-    axios.get('https://www.zdf.de/rss/zdf/nachrichten')
-        .then((response) => {
-            console.log(response.data);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
+    public getFeedData = (url: string): Feed => {
+        const urlHash = objectHash.sha1(url);
+        if (this.feedUrls.has(urlHash)) {
+            const feedData: UrlMetaData = this.feedUrls.get(urlHash) as UrlMetaData;
+            return feedData?.data;
+        } else {
+            this.feedUrls.set(urlHash, {
+                url: url,
+                data: {} as Feed,
+                subscription: this.getNewsFeed(url, urlHash)
+            });
+            return {} as Feed;
+        }
+    };
 
-    // let observable$ = new Observable((observer) => {
-    //     axios.get('https://www.zdf.de/rss/zdf/nachrichten')
-    //         .then((response) => {
-    //             observer.next(response.data);
-    //             observer.complete();
-    //         })
-    //         .catch((error) => {
-    //             observer.error(error);
-    //         });
-    // });
-    // let subscription = observable$.subscribe({
-    //     next: data => {
-    //         console.log('[data] => ', data)
-    //     },
-    //     complete: data => console.log('[complete]'),
-    // });
-    // return observable$.toPromise();
-    return "test";
-    // return feeder.getFeed("https://www.zdf.de/rss/zdf/nachrichten").subscribe(
-    //     value => console.log(value)
-    // );
+    getNewsFeed = (url: string, key: string): Subscription => {
+        console.log("fetch begin für " + url + " mit key " + key);
+        const feed$: Observable<AxiosResponse> = from(axios.get(url));
+        const subscription: Subscription = feed$.subscribe(
+            feedResponse => {
+                console.log("fetch begin");
+                const metaData: UrlMetaData = this.feedUrls.get(key) as UrlMetaData;
+                if (metaData) {
+                    const data = feedResponse.data;
+                    console.log("Data: " + data);
+                    metaData.data = {type: "", items: data, key: ""};
+                    this.feedUrls.set(key, metaData);
+                }
+            }
+        );
+        return subscription;
+    };
+}
+
+
+const feeder: Feeder = new Feeder();
+
+export const getFeedData = (url: string): Feed => {
+    return feeder.getFeedData(url);
 };
 
 
