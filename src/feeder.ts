@@ -4,6 +4,15 @@ import axios from "axios";
 
 
 export const getNewsFeed = (): string => {
+    console.log("fech begin");
+    axios.get('https://www.zdf.de/rss/zdf/nachrichten')
+        .then((response) => {
+            console.log(response.data);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+
     // let observable$ = new Observable((observer) => {
     //     axios.get('https://www.zdf.de/rss/zdf/nachrichten')
     //         .then((response) => {
