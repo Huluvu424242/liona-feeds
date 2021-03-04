@@ -1,7 +1,8 @@
-import FeedMe, {Feed} from "feedme";
-import {from, Observable, Subscription} from "rxjs";
+import {Feed} from "feedme";
+import {EMPTY, from, Observable, Subscription, timer} from "rxjs";
 import * as objectHash from "object-hash";
 import axios, {AxiosResponse} from "axios";
+import {catchError, switchMap, tap} from "rxjs/operators";
 
 interface UrlMetaData {
     url: string;
@@ -15,7 +16,7 @@ class Feeder {
 
 
     public getFeedData = (url: string): Feed => {
-        console.log("Anfrage: "+url);
+        console.log("Anfrage: " + url);
         const urlHash = objectHash.sha1(url);
         if (this.feedUrls.has(urlHash)) {
             const feedData: UrlMetaData = this.feedUrls.get(urlHash) as UrlMetaData;
@@ -32,7 +33,11 @@ class Feeder {
 
     getNewsFeed = (url: string, key: string): Subscription => {
         console.log("fetch begin für " + url + " mit key " + key);
-        const feed$: Observable<AxiosResponse> = from(axios.get(url));
+        const feed$: Observable<AxiosResponse> = timer(0, 5000).pipe(
+            tap(() => console.log("Neue Abfrage von " + url)),
+            switchMap(() => from(axios.get(url)).pipe(catchError(() => EMPTY))),
+        );
+
         const subscription: Subscription = feed$.subscribe(
             feedResponse => {
                 console.log("fetch begin");
@@ -57,41 +62,6 @@ export const getFeedData = (url: string): Feed => {
 };
 
 
-/**
- * @Method: Returns the plural form of any noun.
- * @Param {string}
- * @Return {string}
- */
-// const getFeed = (queryUrl: string): Observable<Feed> => {
-//     console.info('###url: ' + queryUrl);
-//     return from(loadFeedData(queryUrl));
-// }
-
-const loadFeedData = (url: string): Promise<Feed> => {
-    return new Promise<Feed>((resolve, reject) => {
-        fetch(url).then((response: Response) => {
-            if (response.status != 200) {
-                const error = new Error(`status code ${response.status}`);
-                console.error(error);
-                reject(error);
-            } else {
-                let parser = new FeedMe(true);
-                parser.on('finish', () => {
-                    try {
-                        const data: Feed = parser.done() as Feed;
-                        resolve(data);
-                    } catch (ex) {
-                        // expect to failed if no body
-                        console.warn("Error during read data of response " + ex);
-                        reject(ex);
-                    }
-
-                });
-                response.text().then((txt) => parser.end(txt));
-            }
-        });
-    });
-};
 
 
 
