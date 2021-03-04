@@ -1,5 +1,5 @@
-import {getFeed} from "./feeder";
+import {getNewsFeed} from "./feeder";
 
 export {
-    getFeed
+    getNewsFeed
 }

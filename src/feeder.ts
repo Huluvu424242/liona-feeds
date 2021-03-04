@@ -1,5 +1,31 @@
 import FeedMe, {Feed} from "feedme";
 import {from, Observable} from "rxjs";
+import axios from "axios";
+
+
+export const getNewsFeed = (): string => {
+    // let observable$ = new Observable((observer) => {
+    //     axios.get('https://www.zdf.de/rss/zdf/nachrichten')
+    //         .then((response) => {
+    //             observer.next(response.data);
+    //             observer.complete();
+    //         })
+    //         .catch((error) => {
+    //             observer.error(error);
+    //         });
+    // });
+    // let subscription = observable$.subscribe({
+    //     next: data => {
+    //         console.log('[data] => ', data)
+    //     },
+    //     complete: data => console.log('[complete]'),
+    // });
+    // return observable$.toPromise();
+    return "test";
+    // return feeder.getFeed("https://www.zdf.de/rss/zdf/nachrichten").subscribe(
+    //     value => console.log(value)
+    // );
+};
 
 
 /**
@@ -7,10 +33,10 @@ import {from, Observable} from "rxjs";
  * @Param {string}
  * @Return {string}
  */
-export const getFeed = (queryUrl: string): Observable<Feed> => {
-    console.info('###url: '+queryUrl);
-    return from(loadFeedData(queryUrl));
-}
+// const getFeed = (queryUrl: string): Observable<Feed> => {
+//     console.info('###url: ' + queryUrl);
+//     return from(loadFeedData(queryUrl));
+// }
 
 const loadFeedData = (url: string): Promise<Feed> => {
     return new Promise<Feed>((resolve, reject) => {
@@ -36,4 +62,7 @@ const loadFeedData = (url: string): Promise<Feed> => {
             }
         });
     });
-}
+};
+
+
+
