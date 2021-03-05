@@ -16,21 +16,40 @@ class Feeder {
 
     protected feedUrls: Map<string, UrlMetaData> = new Map();
 
+    protected logMetadata(feedData: UrlMetaData) {
+        console.debug("Url:" + feedData.url);
+        console.debug("Period:" + feedData.period);
+        console.debug("Statistik:" + feedData.withStatistic);
+    }
 
     public getFeedData = (url: string, period: number, withStatistic: boolean): Feed => {
         console.log("Anfrage: " + url);
-        const urlHash = objectHash.sha1(url);
-        if (this.feedUrls.has(urlHash)) {
-            const feedData: UrlMetaData = this.feedUrls.get(urlHash) as UrlMetaData;
+        const key = objectHash.sha1(url);
+        if (this.feedUrls.has(key)) {
+            const feedData: UrlMetaData = this.feedUrls.get(key) as UrlMetaData;
+            this.logMetadata(feedData);
+            // Wechsel Statistik schreiben
+            if (withStatistic !== feedData.withStatistic) {
+                feedData.withStatistic = withStatistic;
+            }
+            // Wechsel Abfrageperiode
+            if (period !== feedData.period) {
+                feedData.period = period;
+                feedData.subscription.unsubscribe();
+                feedData.subscription = this.getNewsFeed(url, key, period, withStatistic);
+            }
+            this.logMetadata(feedData);
             return feedData?.data;
         } else {
-            this.feedUrls.set(urlHash, {
+            const feedData: UrlMetaData = {
                 url: url,
                 period: period,
                 withStatistic: withStatistic,
                 data: {} as Feed,
-                subscription: this.getNewsFeed(url, urlHash, period, withStatistic)
-            });
+                subscription: this.getNewsFeed(url, key, period, withStatistic)
+            };
+            this.logMetadata(feedData);
+            this.feedUrls.set(key, feedData);
             return {} as Feed;
         }
     };
@@ -48,10 +67,10 @@ class Feeder {
                 const metaData: UrlMetaData = this.feedUrls.get(key) as UrlMetaData;
                 if (metaData) {
                     const data = feedResponse.data;
-                    console.debug("Feed Data: " + data)
-                    console.info("Data received for : " + metaData.url);
+                    // console.debug("Feed Data: " + data)
+                    console.debug("Data received for : " + metaData.url);
                     metaData.data = {type: "", items: data, key: ""};
-                    this.feedUrls.set(key, metaData);
+                    // this.feedUrls.set(key, metaData);
                 } else {
                     console.debug("Keine Metadaten zur Anfrage gefunden");
                 }
@@ -72,9 +91,9 @@ class Feeder {
 
 const feeder: Feeder = new Feeder();
 
-export const getFeedData = (url: string, period: string, statistic: string): Feed => {
+export const getFeedData = (url: string, period: string, nostatistic: string): Feed => {
     const withPeriod: number = +period || 5000;
-    const withStatistic: boolean = statistic === "off" || true;
+    const withStatistic: boolean = !nostatistic;
     return feeder.getFeedData(url, withPeriod, withStatistic);
 };
 
