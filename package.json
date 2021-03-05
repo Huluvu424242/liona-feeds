@@ -1,0 +1,44 @@
+{
+  "name": "@huluvu424242/liona-feeds",
+  "version": "1.0.0",
+  "description": "Modul to realize an REST endpoint to receive news feed data",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "index.d.ts",
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "build": "npx tsc -p tsconfig.json && npx tsc -p tsconfig-cjs.json",
+    "start": "node demo/server.js",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Huluvu424242/liona-feeds.git"
+  },
+  "keywords": [
+    "liona-news",
+    "news-feed",
+    "rest-endpoint"
+  ],
+  "author": "Huluvu424242 (Thomas Schubert)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Huluvu424242/liona-feeds/issues"
+  },
+  "homepage": "https://github.com/Huluvu424242/liona-feeds#readme",
+  "dependencies": {
+    "rxjs": "6.6.3",
+    "rxjs-operators": "1.1.3",
+    "feedme": "2.0.2",
+    "axios": "0.21.1",
+    "object-hash": "2.1.1"
+  },
+  "devDependencies": {
+    "@types/feedme": "^1.0.0",
+    "@types/object-hash": "^1.3.4",
+    "express": "4.17.1",
+    "typescript": "4.1.5"
+  }
+}
