@@ -18,16 +18,18 @@ class Feeder {
 
     protected feedUrls: Map<string, UrlMetaData> = new Map();
 
-    protected logError(message: string) {
-        if (this.isLogActive) console.error(message);
+    protected logError(error: Error) {
+        if (console) {
+            console.error(error);
+        }
     }
 
     protected logDebug(message: string) {
-        if (this.isLogActive) console.debug(message);
+        if (this.isLogActive && console) console.debug(message);
     }
 
     protected logInfo(message: string) {
-        if (this.isLogActive) console.info(message);
+        if (this.isLogActive && console) console.info(message);
     }
 
     protected logMetadata(titel: string, feedData: UrlMetaData) {
@@ -76,23 +78,22 @@ class Feeder {
             switchMap(() => from(axios.get(url)).pipe(catchError(() => EMPTY))),
         );
 
-        const subscription: Subscription = feed$.subscribe(
+        return feed$.subscribe(
             (feedResponse: AxiosResponse) => {
-                // if (response.status != 200) {
-                //     this.logError(new Error(`status code ${feedResponse.status}`));
-                //     return;
-                // }
+                if (feedResponse.status != 200) {
+                    this.logError(new Error(`status code ${feedResponse.status}`));
+                    return;
+                }
                 let parser = new FeedMe(true);
                 parser.end(feedResponse.data);
                 const feed = parser.done() as Feed;
                 this.speichereResponsedaten(key, feed);
             }, (error) => {
-                this.logError("Response failed with: " + error);
+                this.logError(new Error(`Response failed with: ${error}`));
             }, () => {
                 this.logDebug("Feed complete for " + url + "(" + key + ")");
             }
         );
-        return subscription;
     };
 
     protected speichereResponsedaten(key: string, feed: Feed) {
