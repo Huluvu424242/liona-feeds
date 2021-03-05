@@ -1,4 +1,4 @@
-import {Feed} from "feedme";
+import FeedMe, {Feed} from "feedme";
 import {EMPTY, from, Observable, Subscription, timer} from "rxjs";
 import * as objectHash from "object-hash";
 import axios, {AxiosResponse} from "axios";
@@ -69,7 +69,7 @@ class Feeder {
         }
     };
 
-    getNewsFeed = (url: string, key: string, period: number, withStatistic: boolean): Subscription => {
+    protected getNewsFeed = (url: string, key: string, period: number, withStatistic: boolean): Subscription => {
         this.logDebug("fetch begin für " + url + " mit key " + key);
         const feed$: Observable<AxiosResponse> = timer(0, period).pipe(
             tap(() => console.log("Neue Abfrage von " + url)),
@@ -78,16 +78,14 @@ class Feeder {
 
         const subscription: Subscription = feed$.subscribe(
             (feedResponse: AxiosResponse) => {
-                this.logDebug("Suche Metadaten zur Ablage der Responsedaten.");
-                const metaData: UrlMetaData = this.feedUrls.get(key) as UrlMetaData;
-                if (metaData) {
-                    const data = feedResponse.data;
-                    // console.debug("Feed Data: " + data)
-                    this.logDebug("Data received for : " + metaData.url);
-                    metaData.data = {type: "", items: data, key: ""};
-                } else {
-                    this.logDebug("Keine Metadaten zur Anfrage gefunden");
-                }
+                // if (response.status != 200) {
+                //     this.logError(new Error(`status code ${feedResponse.status}`));
+                //     return;
+                // }
+                let parser = new FeedMe(true);
+                parser.end(feedResponse.data);
+                const feed = parser.done() as Feed;
+                this.speichereResponsedaten(key, feed);
             }, (error) => {
                 this.logError("Response failed with: " + error);
             }, () => {
@@ -97,8 +95,16 @@ class Feeder {
         return subscription;
     };
 
-    speichereResponsedaten() {
-
+    protected speichereResponsedaten(key: string, feed: Feed) {
+        this.logDebug("Suche Metadaten zur Ablage der Responsedaten.");
+        const metaData: UrlMetaData = this.feedUrls.get(key) as UrlMetaData;
+        if (metaData) {
+            this.logDebug("Feed Data: " + JSON.stringify(feed));
+            this.logDebug("Data received for : " + metaData.url);
+            metaData.data = feed;
+        } else {
+            this.logDebug("Keine Metadaten zur Anfrage gefunden");
+        }
     }
 }
 
