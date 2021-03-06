@@ -5,6 +5,7 @@
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "index.d.ts",
+  "unpkg": "dist/honey-news/honey-news.js",
   "files": [
     "dist/"
   ],
@@ -28,6 +29,9 @@
     "url": "https://github.com/Huluvu424242/liona-feeds/issues"
   },
   "homepage": "https://github.com/Huluvu424242/liona-feeds#readme",
+  "engines": {
+    "node": "14.15.0"
+  },
   "dependencies": {
     "rxjs": "6.6.3",
     "rxjs-operators": "1.1.3",
