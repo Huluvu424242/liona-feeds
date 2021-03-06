@@ -33,3 +33,9 @@ define(function(require,exports,module){
 ```sh
 npm run test
 ```
+## Demo 
+```sh
+npm run start
+or
+node demo/server.js
+```
