@@ -1,3 +1,10 @@
+![Github CI](https://github.com/Huluvu424242/liona-feeds/workflows/Github%20CI/badge.svg)
+[![npm](https://img.shields.io/npm/v/@huluvu424242/liona-feeds.svg)](https://www.npmjs.com/package/@huluvu424242/liona-feeds)
+[![npm](https://img.shields.io/npm/dm/@huluvu424242/liona-feeds.svg)](https://www.npmjs.com/package/@huluvu424242/liona-feeds)
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/@huluvu424242/liona-feeds)
+[![Donate with paypal](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://paypal.me/huluvu424242)
+![Keybase BTC](https://img.shields.io/keybase/btc/huluvu424242)
+
 # liona-feeds
 A Node.js module that provided an REST endpoint to receive news feeds.
 ## Installation 
