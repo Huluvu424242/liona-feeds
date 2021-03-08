@@ -1,6 +1,7 @@
-import {getFeedData, getFeedDataFor} from "./feeder";
+import {addCORSHeader, getFeedData, getFeedDataFor} from "./feeder";
 
 export {
+    addCORSHeader,
     getFeedData,
     getFeedDataFor
 }
