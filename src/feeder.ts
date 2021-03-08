@@ -3,8 +3,9 @@ import {EMPTY, from, Observable, Subscription, timer} from "rxjs";
 import * as objectHash from "object-hash";
 import axios, {AxiosResponse} from "axios";
 import {catchError, switchMap, tap} from "rxjs/operators";
+import {Logger} from "./logger";
 
-interface UrlMetaData {
+interface FeedMetadata {
     url: string;
     period: number;
     withStatistic: boolean;
@@ -14,36 +15,58 @@ interface UrlMetaData {
 
 class Feeder {
 
-    protected isLogActive = true;
+    protected LOG: Logger = new Logger();
 
-    protected feedUrls: Map<string, UrlMetaData> = new Map();
+    protected feeds: Map<string, FeedMetadata> = new Map();
 
-    protected logError(error: Error) {
-        if (console) {
-            console.error(error);
+    protected logMetadata(titel: string, feedData: FeedMetadata) {
+        this.LOG.logDebug(titel);
+        this.LOG.logDebug("Url:" + feedData.url);
+        this.LOG.logDebug("Period:" + feedData.period);
+        this.LOG.logDebug("Statistik:" + feedData.withStatistic);
+    }
+
+    public unsubscribeFeedFor = (uuid: string, url: string): void => {
+        const key = objectHash.sha1(uuid + url);
+        if (this.feeds.has(key)) {
+            const feed: FeedMetadata = this.feeds.get(key) as FeedMetadata;
+            this.feeds.delete(key);
+            feed.subscription.unsubscribe();
         }
-    }
+    };
 
-    protected logDebug(message: string) {
-        if (this.isLogActive && console) console.debug(message);
-    }
-
-    protected logInfo(message: string) {
-        if (this.isLogActive && console) console.info(message);
-    }
-
-    protected logMetadata(titel: string, feedData: UrlMetaData) {
-        this.logDebug(titel);
-        this.logDebug("Url:" + feedData.url);
-        this.logDebug("Period:" + feedData.period);
-        this.logDebug("Statistik:" + feedData.withStatistic);
-    }
-
-    public getFeedData = (url: string, period: number, withStatistic: boolean): Feed => {
-        this.logInfo("Eingehende Anfrage für " + url + " mit period: " + period + " und Statistik " + withStatistic);
+    public getFeedData = (url: string, withStatistic: boolean): Feed => {
+        this.LOG.logInfo("Eingehende Anfrage an " + url + " und Statistik " + withStatistic);
         const key = objectHash.sha1(url);
-        if (this.feedUrls.has(key)) {
-            const feedData: UrlMetaData = this.feedUrls.get(key) as UrlMetaData;
+        if (this.feeds.has(key)) {
+            const feedData: FeedMetadata = this.feeds.get(key) as FeedMetadata;
+            this.logMetadata("Metadaten Alt", feedData);
+            // Wechsel Statistik schreiben
+            if (withStatistic !== feedData.withStatistic) {
+                feedData.withStatistic = withStatistic;
+            }
+            this.logMetadata("Metadaten Neu", feedData);
+            return feedData?.data;
+        } else {
+            const feedData: FeedMetadata = {
+                url: url,
+                period: DEFAULT_PERIOD,
+                withStatistic: withStatistic,
+                data: {} as Feed,
+                subscription: this.getNewsFeed(url, key, DEFAULT_PERIOD, withStatistic)
+            };
+            this.logMetadata("Erstelle Metadaten", feedData);
+            this.feeds.set(key, feedData);
+            return {} as Feed;
+        }
+
+    };
+
+    public getFeedDataFor = (uuid: string, url: string, period: number, withStatistic: boolean): Feed => {
+        this.LOG.logInfo("Eingehende Anfrage für " + uuid + " an " + url + " mit period: " + period + " und Statistik " + withStatistic);
+        const key = objectHash.sha1(uuid + url);
+        if (this.feeds.has(key)) {
+            const feedData: FeedMetadata = this.feeds.get(key) as FeedMetadata;
             this.logMetadata("Metadaten Alt", feedData);
             // Wechsel Statistik schreiben
             if (withStatistic !== feedData.withStatistic) {
@@ -58,7 +81,7 @@ class Feeder {
             this.logMetadata("Metadaten Neu", feedData);
             return feedData?.data;
         } else {
-            const feedData: UrlMetaData = {
+            const feedData: FeedMetadata = {
                 url: url,
                 period: period,
                 withStatistic: withStatistic,
@@ -66,13 +89,13 @@ class Feeder {
                 subscription: this.getNewsFeed(url, key, period, withStatistic)
             };
             this.logMetadata("Erstelle Metadaten", feedData);
-            this.feedUrls.set(key, feedData);
+            this.feeds.set(key, feedData);
             return {} as Feed;
         }
     };
 
     protected getNewsFeed = (url: string, key: string, period: number, withStatistic: boolean): Subscription => {
-        this.logDebug("fetch begin für " + url + " mit key " + key);
+        this.LOG.logDebug("fetch begin für " + url + " mit key " + key);
         const feed$: Observable<AxiosResponse> = timer(0, period).pipe(
             tap(() => console.log("Neue Abfrage von " + url)),
             switchMap(() => from(axios.get(url)).pipe(catchError(() => EMPTY))),
@@ -81,7 +104,7 @@ class Feeder {
         return feed$.subscribe(
             (feedResponse: AxiosResponse) => {
                 if (feedResponse.status != 200) {
-                    this.logError(new Error(`status code ${feedResponse.status}`));
+                    this.LOG.logError(new Error(`status code ${feedResponse.status}`));
                     return;
                 }
                 let parser = new FeedMe(true);
@@ -89,36 +112,52 @@ class Feeder {
                 const feed = parser.done() as Feed;
                 this.speichereResponsedaten(key, feed);
             }, (error) => {
-                this.logError(new Error(`Response failed with: ${error}`));
+                this.LOG.logError(new Error(`Response failed with: ${error}`));
             }, () => {
-                this.logDebug("Feed complete for " + url + "(" + key + ")");
+                this.LOG.logDebug("Feed complete for " + url + "(" + key + ")");
             }
         );
     };
 
     protected speichereResponsedaten(key: string, feed: Feed) {
-        this.logDebug("Suche Metadaten zur Ablage der Responsedaten.");
-        const metaData: UrlMetaData = this.feedUrls.get(key) as UrlMetaData;
+        this.LOG.logDebug("Suche Metadaten zur Ablage der Responsedaten.");
+        const metaData: FeedMetadata = this.feeds.get(key) as FeedMetadata;
         if (metaData) {
-            this.logDebug("Feed Data: " + JSON.stringify(feed));
-            this.logDebug("Data received for : " + metaData.url);
+            this.LOG.logDebug("Feed Data: " + JSON.stringify(feed));
+            this.LOG.logDebug("Data received for : " + metaData.url);
             metaData.data = feed;
         } else {
-            this.logDebug("Keine Metadaten zur Anfrage gefunden");
+            this.LOG.logDebug("Keine Metadaten zur Anfrage gefunden");
         }
-    }
+    };
 }
 
 
+const DEFAULT_PERIOD: number = 5000;
 const feeder: Feeder = new Feeder();
 
-export const getFeedData = (url: string, period: string, nostatistic: string): Feed => {
-    const withPeriod: number = +period || 5000;
-    const withStatistic: boolean = !nostatistic;
-    return feeder.getFeedData(url, withPeriod, withStatistic);
+export const getFeedData = (url: string, statistic: string): Feed => {
+    const withStatistic: boolean = !!statistic;
+    return feeder.getFeedData(url, withStatistic);
 };
 
+export const getFeedDataFor = (uuid: string, url: string, period: string, statistic: string): Feed => {
+    const withPeriod: number = +period || DEFAULT_PERIOD;
+    const withStatistic: boolean = !!statistic;
+    return feeder.getFeedDataFor(uuid, url, withPeriod, withStatistic);
+};
 
+export const unsubscribeFeedFor = (uuid: string, url: string): void => {
+    return feeder.unsubscribeFeedFor(uuid, url);
+}
 
+export const addCORSHeader = (req: any, res: any, next: any) => {
+    // const origin = req.get('host') ||  req.get('origin') || "*";
+    const origin = req.get('origin') || "*";
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.setHeader('Access-Control-Allow-Methods', 'GET');
+    next();
+}
 
 
