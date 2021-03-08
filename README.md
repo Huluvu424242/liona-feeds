@@ -16,15 +16,15 @@ bower install @huluvu424242/liona-feeds --save
 ### Javascript
 ```javascript
 var feeds = require('@huluvu424242/liona-feeds');
-var feedContentJSON = feeds.getFeed('https://www.tagesschau.de/xml/atom/');
+var feedContentJSON = feeds.getFeedData('https://www.tagesschau.de/xml/atom/');
 ```
 ```sh
 Output should be an response
 ```
 ### TypeScript
 ```typescript
-import { getFeed } from '@huluvu424242/liona-feeds';
-console.log(getFeed('https://www.zdf.de/rss/zdf/nachrichten'))
+import { getFeedData } from '@huluvu424242/liona-feeds';
+console.log(getFeedData('https://www.zdf.de/rss/zdf/nachrichten'))
 ```
 ```sh
 Output should be an response
