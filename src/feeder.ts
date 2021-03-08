@@ -26,9 +26,36 @@ class Feeder {
         this.LOG.logDebug("Statistik:" + feedData.withStatistic);
     }
 
-    public getFeedData = (url: string, period: number, withStatistic: boolean): Feed => {
-       this.LOG.logInfo("Eingehende Anfrage für " + url + " mit period: " + period + " und Statistik " + withStatistic);
+    public getFeedData = (url: string, withStatistic: boolean): Feed => {
+        this.LOG.logInfo("Eingehende Anfrage an " + url + " und Statistik " + withStatistic);
         const key = objectHash.sha1(url);
+        if (this.feedUrls.has(key)) {
+            const feedData: UrlMetaData = this.feedUrls.get(key) as UrlMetaData;
+            this.logMetadata("Metadaten Alt", feedData);
+            // Wechsel Statistik schreiben
+            if (withStatistic !== feedData.withStatistic) {
+                feedData.withStatistic = withStatistic;
+            }
+            this.logMetadata("Metadaten Neu", feedData);
+            return feedData?.data;
+        } else {
+            const feedData: UrlMetaData = {
+                url: url,
+                period: DEFAULT_PERIOD,
+                withStatistic: withStatistic,
+                data: {} as Feed,
+                subscription: this.getNewsFeed(url, key, DEFAULT_PERIOD, withStatistic)
+            };
+            this.logMetadata("Erstelle Metadaten", feedData);
+            this.feedUrls.set(key, feedData);
+            return {} as Feed;
+        }
+
+    };
+
+    public getFeedDataFor = (uuid:string, url: string, period: number, withStatistic: boolean): Feed => {
+       this.LOG.logInfo("Eingehende Anfrage für " +uuid +" an " + url + " mit period: " + period + " und Statistik " + withStatistic);
+        const key = objectHash.sha1(uuid + url);
         if (this.feedUrls.has(key)) {
             const feedData: UrlMetaData = this.feedUrls.get(key) as UrlMetaData;
            this.logMetadata("Metadaten Alt", feedData);
@@ -93,7 +120,7 @@ class Feeder {
         } else {
            this.LOG.logDebug("Keine Metadaten zur Anfrage gefunden");
         }
-    }
+    };
 }
 
 
@@ -102,13 +129,13 @@ const feeder: Feeder = new Feeder();
 
 export const getFeedData = (url: string, statistic: string): Feed => {
     const withStatistic: boolean = !!statistic;
-    return feeder.getFeedData(url, DEFAULT_PERIOD, withStatistic);
+    return feeder.getFeedData(url, withStatistic);
 };
 
-export const getFeedDataFor = (uui:string, url: string, period: string, statistic: string): Feed => {
+export const getFeedDataFor = (uuid:string, url: string, period: string, statistic: string): Feed => {
     const withPeriod: number = +period || DEFAULT_PERIOD;
     const withStatistic: boolean = !!statistic;
-    return feeder.getFeedData(url, withPeriod, withStatistic);
+    return feeder.getFeedDataFor(uuid, url, withPeriod, withStatistic);
 };
 
 
