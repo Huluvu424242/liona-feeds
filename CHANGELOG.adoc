@@ -5,7 +5,7 @@ Das Format basiert auf http://keepachangelog.com/de/[Keep a Changelog].
 Die Versionierung erfolgt nach http://semver.org/lang/de/[Semantic Versioning].
 
 // == [3.1.1] fertiggestellt 2018-05-11
-== [0.2.0] undelivered
+== [X.X.X] undelivered
 
 === Added
 
@@ -19,6 +19,20 @@ Die Versionierung erfolgt nach http://semver.org/lang/de/[Semantic Versioning].
 
 *
 
+== [2.1.0] fertiggestellt 2021-03-08
+
+=== Added
+
+* https://github.com/Huluvu424242/liona-feeds/issues/3[issue 3] support of uuid
+* https://github.com/Huluvu424242/liona-feeds/issues/4[issue 4] addCORSHeader function added
+
+=== Changed
+
+* signature of getFeedData api -> major change
+
+=== Removed
+
+*
 
 == [1.0.0] fertiggestellt 2021-03-06
 
