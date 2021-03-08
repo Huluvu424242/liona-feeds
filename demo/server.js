@@ -17,6 +17,9 @@ express()
             res.send(feeder.getFeedData(req.query.url, req.query.statistic));
         }
     })
+    .delete('feed/', (req, res) => {
+        res.send(feeder.unsubscribeFeedFor(req.query.uuid, req.query.url));
+    })
 
     .listen(PORT, () => console.log(`Listening on ${PORT}`));
 

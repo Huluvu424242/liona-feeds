@@ -26,6 +26,15 @@ class Feeder {
         this.LOG.logDebug("Statistik:" + feedData.withStatistic);
     }
 
+    public unsubscribeFeedFor = (uuid: string, url: string): void => {
+        const key = objectHash.sha1(uuid + url);
+        if (this.feeds.has(key)) {
+            const feed: FeedMetadata = this.feeds.get(key) as FeedMetadata;
+            this.feeds.delete(key);
+            feed.subscription.unsubscribe();
+        }
+    };
+
     public getFeedData = (url: string, withStatistic: boolean): Feed => {
         this.LOG.logInfo("Eingehende Anfrage an " + url + " und Statistik " + withStatistic);
         const key = objectHash.sha1(url);
@@ -137,6 +146,10 @@ export const getFeedDataFor = (uuid: string, url: string, period: string, statis
     const withStatistic: boolean = !!statistic;
     return feeder.getFeedDataFor(uuid, url, withPeriod, withStatistic);
 };
+
+export const unsubscribeFeedFor = (uuid: string, url: string): void => {
+    return feeder.unsubscribeFeedFor(uuid, url);
+}
 
 export const addCORSHeader = (req: any, res: any, next: any) => {
     // const origin = req.get('host') ||  req.get('origin') || "*";
