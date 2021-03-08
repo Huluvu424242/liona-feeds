@@ -17,7 +17,7 @@ class Feeder {
 
     protected LOG:Logger = new Logger();
 
-    protected feedUrls: Map<string, FeedMetadata> = new Map();
+    protected feeds: Map<string, FeedMetadata> = new Map();
 
     protected logMetadata(titel: string, feedData: FeedMetadata) {
         this.LOG.logDebug(titel);
@@ -29,8 +29,8 @@ class Feeder {
     public getFeedData = (url: string, withStatistic: boolean): Feed => {
         this.LOG.logInfo("Eingehende Anfrage an " + url + " und Statistik " + withStatistic);
         const key = objectHash.sha1(url);
-        if (this.feedUrls.has(key)) {
-            const feedData: FeedMetadata = this.feedUrls.get(key) as FeedMetadata;
+        if (this.feeds.has(key)) {
+            const feedData: FeedMetadata = this.feeds.get(key) as FeedMetadata;
             this.logMetadata("Metadaten Alt", feedData);
             // Wechsel Statistik schreiben
             if (withStatistic !== feedData.withStatistic) {
@@ -47,7 +47,7 @@ class Feeder {
                 subscription: this.getNewsFeed(url, key, DEFAULT_PERIOD, withStatistic)
             };
             this.logMetadata("Erstelle Metadaten", feedData);
-            this.feedUrls.set(key, feedData);
+            this.feeds.set(key, feedData);
             return {} as Feed;
         }
 
@@ -56,8 +56,8 @@ class Feeder {
     public getFeedDataFor = (uuid:string, url: string, period: number, withStatistic: boolean): Feed => {
        this.LOG.logInfo("Eingehende Anfrage für " +uuid +" an " + url + " mit period: " + period + " und Statistik " + withStatistic);
         const key = objectHash.sha1(uuid + url);
-        if (this.feedUrls.has(key)) {
-            const feedData: FeedMetadata = this.feedUrls.get(key) as FeedMetadata;
+        if (this.feeds.has(key)) {
+            const feedData: FeedMetadata = this.feeds.get(key) as FeedMetadata;
            this.logMetadata("Metadaten Alt", feedData);
             // Wechsel Statistik schreiben
             if (withStatistic !== feedData.withStatistic) {
@@ -80,7 +80,7 @@ class Feeder {
                 subscription: this.getNewsFeed(url, key, period, withStatistic)
             };
            this.logMetadata("Erstelle Metadaten", feedData);
-            this.feedUrls.set(key, feedData);
+            this.feeds.set(key, feedData);
             return {} as Feed;
         }
     };
@@ -112,7 +112,7 @@ class Feeder {
 
     protected speichereResponsedaten(key: string, feed: Feed) {
        this.LOG.logDebug("Suche Metadaten zur Ablage der Responsedaten.");
-        const metaData: FeedMetadata = this.feedUrls.get(key) as FeedMetadata;
+        const metaData: FeedMetadata = this.feeds.get(key) as FeedMetadata;
         if (metaData) {
            this.LOG.logDebug("Feed Data: " + JSON.stringify(feed));
            this.LOG.logDebug("Data received for : " + metaData.url);
