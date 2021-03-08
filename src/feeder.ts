@@ -110,14 +110,19 @@ class Feeder {
 }
 
 
+const DEFAULT_PERIOD:number = 5000;
 const feeder: Feeder = new Feeder();
 
-export const getFeedData = (url: string, period: string, nostatistic: string): Feed => {
-    const withPeriod: number = +period || 5000;
-    const withStatistic: boolean = !nostatistic;
-    return feeder.getFeedData(url, withPeriod, withStatistic);
+export const getFeedData = (url: string, statistic: string): Feed => {
+    const withStatistic: boolean = !!statistic;
+    return feeder.getFeedData(url, DEFAULT_PERIOD, withStatistic);
 };
 
+export const getFeedDataFor = (uui:string, url: string, period: string, statistic: string): Feed => {
+    const withPeriod: number = +period || DEFAULT_PERIOD;
+    const withStatistic: boolean = !!statistic;
+    return feeder.getFeedData(url, withPeriod, withStatistic);
+};
 
 
 

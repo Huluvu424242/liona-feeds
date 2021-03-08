@@ -1,5 +1,6 @@
-import {getFeedData} from "./feeder";
+import {getFeedData, getFeedDataFor} from "./feeder";
 
 export {
-    getFeedData
+    getFeedData,
+    getFeedDataFor
 }
