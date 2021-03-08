@@ -1,6 +1,6 @@
 {
   "name": "@huluvu424242/liona-feeds",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "description": "Modul to realize an REST endpoint to receive news feed data",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
