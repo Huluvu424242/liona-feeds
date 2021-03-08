@@ -5,7 +5,7 @@ import axios, {AxiosResponse} from "axios";
 import {catchError, switchMap, tap} from "rxjs/operators";
 import {Logger} from "./logger";
 
-interface UrlMetaData {
+interface FeedMetadata {
     url: string;
     period: number;
     withStatistic: boolean;
@@ -17,9 +17,9 @@ class Feeder {
 
     protected LOG:Logger = new Logger();
 
-    protected feedUrls: Map<string, UrlMetaData> = new Map();
+    protected feedUrls: Map<string, FeedMetadata> = new Map();
 
-    protected logMetadata(titel: string, feedData: UrlMetaData) {
+    protected logMetadata(titel: string, feedData: FeedMetadata) {
         this.LOG.logDebug(titel);
         this.LOG.logDebug("Url:" + feedData.url);
         this.LOG.logDebug("Period:" + feedData.period);
@@ -30,7 +30,7 @@ class Feeder {
         this.LOG.logInfo("Eingehende Anfrage an " + url + " und Statistik " + withStatistic);
         const key = objectHash.sha1(url);
         if (this.feedUrls.has(key)) {
-            const feedData: UrlMetaData = this.feedUrls.get(key) as UrlMetaData;
+            const feedData: FeedMetadata = this.feedUrls.get(key) as FeedMetadata;
             this.logMetadata("Metadaten Alt", feedData);
             // Wechsel Statistik schreiben
             if (withStatistic !== feedData.withStatistic) {
@@ -39,7 +39,7 @@ class Feeder {
             this.logMetadata("Metadaten Neu", feedData);
             return feedData?.data;
         } else {
-            const feedData: UrlMetaData = {
+            const feedData: FeedMetadata = {
                 url: url,
                 period: DEFAULT_PERIOD,
                 withStatistic: withStatistic,
@@ -57,7 +57,7 @@ class Feeder {
        this.LOG.logInfo("Eingehende Anfrage für " +uuid +" an " + url + " mit period: " + period + " und Statistik " + withStatistic);
         const key = objectHash.sha1(uuid + url);
         if (this.feedUrls.has(key)) {
-            const feedData: UrlMetaData = this.feedUrls.get(key) as UrlMetaData;
+            const feedData: FeedMetadata = this.feedUrls.get(key) as FeedMetadata;
            this.logMetadata("Metadaten Alt", feedData);
             // Wechsel Statistik schreiben
             if (withStatistic !== feedData.withStatistic) {
@@ -72,7 +72,7 @@ class Feeder {
            this.logMetadata("Metadaten Neu", feedData);
             return feedData?.data;
         } else {
-            const feedData: UrlMetaData = {
+            const feedData: FeedMetadata = {
                 url: url,
                 period: period,
                 withStatistic: withStatistic,
@@ -112,7 +112,7 @@ class Feeder {
 
     protected speichereResponsedaten(key: string, feed: Feed) {
        this.LOG.logDebug("Suche Metadaten zur Ablage der Responsedaten.");
-        const metaData: UrlMetaData = this.feedUrls.get(key) as UrlMetaData;
+        const metaData: FeedMetadata = this.feedUrls.get(key) as FeedMetadata;
         if (metaData) {
            this.LOG.logDebug("Feed Data: " + JSON.stringify(feed));
            this.LOG.logDebug("Data received for : " + metaData.url);
