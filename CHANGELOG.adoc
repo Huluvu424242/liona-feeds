@@ -19,6 +19,24 @@ Die Versionierung erfolgt nach http://semver.org/lang/de/[Semantic Versioning].
 
 *
 
+== [2.2.0] fertiggestellt 2021-03-09
+
+=== Added
+
+* https://github.com/Huluvu424242/liona-feeds/issues/7[issue 7] cleanup realisiert
+
+** Alle 30 Minuten läuft der Cleanup Job und prüft
+** ob ein Feed länger als 60 Minuten nicht mehr angefragt wurde
+
+
+=== Changed
+
+* Alle 10 Minuten werden die Feeds als Default abgefragt, wer schneller wünscht muss einer Periode angeben
+
+=== Removed
+
+*
+
 == [2.1.0] fertiggestellt 2021-03-08
 
 === Added
