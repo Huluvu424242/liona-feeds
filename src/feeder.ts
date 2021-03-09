@@ -4,20 +4,16 @@ import * as objectHash from "object-hash";
 import axios, {AxiosResponse} from "axios";
 import {catchError, switchMap, tap} from "rxjs/operators";
 import {Logger} from "./logger";
+import {Cleaner, FeedMetadata} from "./cleaner";
 
-interface FeedMetadata {
-    url: string;
-    period: number;
-    withStatistic: boolean;
-    data: Feed;
-    subscription: Subscription;
-}
 
 class Feeder {
 
     protected LOG: Logger = new Logger();
 
     protected feeds: Map<string, FeedMetadata> = new Map();
+
+    protected cleaner:Cleaner=new Cleaner(this.feeds); // selbststartend
 
     protected logMetadata(titel: string, feedData: FeedMetadata) {
         this.LOG.logDebug(titel);
@@ -41,6 +37,8 @@ class Feeder {
         if (this.feeds.has(key)) {
             const feedData: FeedMetadata = this.feeds.get(key) as FeedMetadata;
             this.logMetadata("Metadaten Alt", feedData);
+            // Log lastRequest
+            feedData.lastRequested = new Date();
             // Wechsel Statistik schreiben
             if (withStatistic !== feedData.withStatistic) {
                 feedData.withStatistic = withStatistic;
@@ -49,6 +47,7 @@ class Feeder {
             return feedData?.data;
         } else {
             const feedData: FeedMetadata = {
+                lastRequested: new Date(),
                 url: url,
                 period: DEFAULT_PERIOD,
                 withStatistic: withStatistic,
@@ -62,12 +61,14 @@ class Feeder {
 
     };
 
-    public getFeedDataFor = (uuid: string, url: string, period: number, withStatistic: boolean): Feed => {
+    public subscribeFeedDataFor = (uuid: string, url: string, period: number, withStatistic: boolean): Feed => {
         this.LOG.logInfo("Eingehende Anfrage für " + uuid + " an " + url + " mit period: " + period + " und Statistik " + withStatistic);
         const key = objectHash.sha1(uuid + url);
         if (this.feeds.has(key)) {
             const feedData: FeedMetadata = this.feeds.get(key) as FeedMetadata;
             this.logMetadata("Metadaten Alt", feedData);
+            // Log lastRequested
+            feedData.lastRequested = new Date();
             // Wechsel Statistik schreiben
             if (withStatistic !== feedData.withStatistic) {
                 feedData.withStatistic = withStatistic;
@@ -82,6 +83,7 @@ class Feeder {
             return feedData?.data;
         } else {
             const feedData: FeedMetadata = {
+                lastRequested: new Date(),
                 url: url,
                 period: period,
                 withStatistic: withStatistic,
@@ -133,7 +135,7 @@ class Feeder {
 }
 
 
-const DEFAULT_PERIOD: number = 5000;
+const DEFAULT_PERIOD: number = 60000*10;
 const feeder: Feeder = new Feeder();
 
 export const getFeedData = (url: string, statistic: string): Feed => {
@@ -144,20 +146,10 @@ export const getFeedData = (url: string, statistic: string): Feed => {
 export const getFeedDataFor = (uuid: string, url: string, period: string, statistic: string): Feed => {
     const withPeriod: number = +period || DEFAULT_PERIOD;
     const withStatistic: boolean = !!statistic;
-    return feeder.getFeedDataFor(uuid, url, withPeriod, withStatistic);
+    return feeder.subscribeFeedDataFor(uuid, url, withPeriod, withStatistic);
 };
 
 export const unsubscribeFeedFor = (uuid: string, url: string): void => {
     return feeder.unsubscribeFeedFor(uuid, url);
 }
-
-export const addCORSHeader = (req: any, res: any, next: any) => {
-    // const origin = req.get('host') ||  req.get('origin') || "*";
-    const origin = req.get('origin') || "*";
-    res.setHeader("Access-Control-Allow-Origin", origin);
-    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.setHeader('Access-Control-Allow-Methods', 'GET');
-    next();
-}
-
 
