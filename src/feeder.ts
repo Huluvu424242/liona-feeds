@@ -4,20 +4,16 @@ import * as objectHash from "object-hash";
 import axios, {AxiosResponse} from "axios";
 import {catchError, switchMap, tap} from "rxjs/operators";
 import {Logger} from "./logger";
+import {Cleaner, FeedMetadata} from "./cleaner";
 
-interface FeedMetadata {
-    url: string;
-    period: number;
-    withStatistic: boolean;
-    data: Feed;
-    subscription: Subscription;
-}
 
 class Feeder {
 
     protected LOG: Logger = new Logger();
 
     protected feeds: Map<string, FeedMetadata> = new Map();
+
+    protected cleaner:Cleaner=new Cleaner(this.feeds); // selbststartend
 
     protected logMetadata(titel: string, feedData: FeedMetadata) {
         this.LOG.logDebug(titel);
@@ -41,6 +37,8 @@ class Feeder {
         if (this.feeds.has(key)) {
             const feedData: FeedMetadata = this.feeds.get(key) as FeedMetadata;
             this.logMetadata("Metadaten Alt", feedData);
+            // Log lastRequest
+            feedData.lastRequested = new Date();
             // Wechsel Statistik schreiben
             if (withStatistic !== feedData.withStatistic) {
                 feedData.withStatistic = withStatistic;
@@ -49,6 +47,7 @@ class Feeder {
             return feedData?.data;
         } else {
             const feedData: FeedMetadata = {
+                lastRequested: new Date(),
                 url: url,
                 period: DEFAULT_PERIOD,
                 withStatistic: withStatistic,
@@ -68,6 +67,8 @@ class Feeder {
         if (this.feeds.has(key)) {
             const feedData: FeedMetadata = this.feeds.get(key) as FeedMetadata;
             this.logMetadata("Metadaten Alt", feedData);
+            // Log lastRequested
+            feedData.lastRequested = new Date();
             // Wechsel Statistik schreiben
             if (withStatistic !== feedData.withStatistic) {
                 feedData.withStatistic = withStatistic;
@@ -82,6 +83,7 @@ class Feeder {
             return feedData?.data;
         } else {
             const feedData: FeedMetadata = {
+                lastRequested: new Date(),
                 url: url,
                 period: period,
                 withStatistic: withStatistic,
