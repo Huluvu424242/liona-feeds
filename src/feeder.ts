@@ -62,7 +62,7 @@ class Feeder {
 
     };
 
-    public getFeedDataFor = (uuid: string, url: string, period: number, withStatistic: boolean): Feed => {
+    public subscribeFeedDataFor = (uuid: string, url: string, period: number, withStatistic: boolean): Feed => {
         this.LOG.logInfo("Eingehende Anfrage für " + uuid + " an " + url + " mit period: " + period + " und Statistik " + withStatistic);
         const key = objectHash.sha1(uuid + url);
         if (this.feeds.has(key)) {
@@ -144,7 +144,7 @@ export const getFeedData = (url: string, statistic: string): Feed => {
 export const getFeedDataFor = (uuid: string, url: string, period: string, statistic: string): Feed => {
     const withPeriod: number = +period || DEFAULT_PERIOD;
     const withStatistic: boolean = !!statistic;
-    return feeder.getFeedDataFor(uuid, url, withPeriod, withStatistic);
+    return feeder.subscribeFeedDataFor(uuid, url, withPeriod, withStatistic);
 };
 
 export const unsubscribeFeedFor = (uuid: string, url: string): void => {
