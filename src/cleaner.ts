@@ -14,8 +14,8 @@ export interface FeedMetadata {
     subscription: Subscription;
 }
 
-const JOB_PERIOD: number = 60000 * 1; // jede Minute
-const TIMEOUT_DELTA: number = 60000 * 2; // alle 10 Minuten
+const JOB_PERIOD: number = 60000 * 30; // alle 30 Minuten
+const TIMEOUT_DELTA: number = 60000 * 60; // alle 60 Minuten
 
 export class Cleaner {
 

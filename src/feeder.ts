@@ -135,7 +135,7 @@ class Feeder {
 }
 
 
-const DEFAULT_PERIOD: number = 5000;
+const DEFAULT_PERIOD: number = 60000*10;
 const feeder: Feeder = new Feeder();
 
 export const getFeedData = (url: string, statistic: string): Feed => {
