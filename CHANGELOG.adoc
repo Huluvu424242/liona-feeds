@@ -18,6 +18,19 @@ Die Versionierung erfolgt nach http://semver.org/lang/de/[Semantic Versioning].
 === Removed
 
 *
+== [X.X.X] undelivered
+
+=== Added
+
+* https://github.com/Huluvu424242/liona-feeds/issues/10[issue 10] add statistic module
+
+=== Changed
+
+*
+
+=== Removed
+
+*
 
 == [2.2.0] fertiggestellt 2021-03-09
 
