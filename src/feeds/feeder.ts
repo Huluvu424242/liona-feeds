@@ -25,10 +25,12 @@ class Feeder {
     }
 
     public getFeeds(): Observable<StatisticData[]> {
+        this.LOG.logDebug("Statistiken angefragt");
         return this.statistic.getStatistics();
     }
 
     public getRankedFeeds() {
+        this.LOG.logDebug("Ranked Statistiken angefragt");
         return this.statistic.getRankedStatistics();
     }
 
@@ -111,8 +113,8 @@ class Feeder {
         this.LOG.logDebug("fetch begin für " + url + " mit key " + key);
         const feed$: Observable<AxiosResponse> = timer(0, period).pipe(
             tap(() => console.log("Neue Abfrage von " + url)),
-            switchMap(() => from(axios.get(url)).pipe(catchError(() => EMPTY))),
-            tap(() => this.statistic.feedWasContacted(key))
+            tap(() => this.statistic.feedWasContacted(key)),
+            switchMap(() => from(axios.get(url)).pipe(catchError(() => EMPTY)))
         );
 
         return feed$.subscribe(
@@ -138,7 +140,7 @@ class Feeder {
         this.LOG.logDebug("Suche Metadaten zur Ablage der Responsedaten.");
         const metaData: FeedMetadata = this.feeds.get(key) as FeedMetadata;
         if (metaData) {
-            this.LOG.logDebug("Feed Data: " + JSON.stringify(feed));
+            // this.LOG.logDebug("Feed Data: " + JSON.stringify(feed));
             this.LOG.logDebug("Data received for : " + metaData.url);
             metaData.data = feed;
         } else {

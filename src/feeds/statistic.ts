@@ -2,6 +2,7 @@ import {FeedMetadata} from "./cleaner";
 import {from, Observable} from "rxjs";
 import {map, tap, toArray} from "rxjs/operators";
 import {Ranking, Score} from "./ranking";
+import {Logger} from "../shared/logger";
 
 export interface StatisticData extends Score {
     url: string;
@@ -11,6 +12,8 @@ export interface StatisticData extends Score {
 }
 
 export class Statistic {
+
+    protected LOG: Logger = new Logger();
 
     protected feedMap: Map<string, FeedMetadata>;
     protected statisticMap: Map<string, StatisticData>;
@@ -29,36 +32,50 @@ export class Statistic {
             .pipe(
                 tap(
                     (items: StatisticData[]) => {
-                        items.forEach((item: StatisticData) => item.score = item.countRequested * (item.countConnected / item.countResponseOK));
+                        items.forEach((item: StatisticData) => {
+                            this.LOG.logDebug("Compute Statistic for " + JSON.stringify(item));
+                            item.score = item.countRequested * (item.countConnected / item.countResponseOK) || 0;
+                            this.LOG.logDebug("Computed Item " + JSON.stringify(item));
+                        });
                     }
                 ),
                 map((items: StatisticData[]) => items.sort(Ranking.sortBestScore))
-            )
-            ;
+            );
     }
 
     public feedWasRequested(key: string) {
-        const statisticData: StatisticData = this.getStatisticData(key);
-        statisticData.countRequested++;
+        const statisticData: StatisticData | null = this.getStatisticData(key);
+        if (statisticData) {
+            statisticData.countRequested++;
+        }
     }
 
     public feedWasContacted(key: string) {
-        const statisticData: StatisticData = this.getStatisticData(key);
-        statisticData.countConnected++;
+        const statisticData: StatisticData | null = this.getStatisticData(key);
+        if (statisticData) {
+            statisticData.countConnected++;
+        }
     }
 
     public feedResponseWasOK(key: string) {
-        const statisticData: StatisticData = this.getStatisticData(key);
-        statisticData.countResponseOK++;
+        const statisticData: StatisticData | null = this.getStatisticData(key);
+        if (statisticData) {
+            statisticData.countResponseOK++;
+        }
     }
 
-    protected getStatisticData(key: string): StatisticData {
+    protected getStatisticData(key: string): StatisticData | null {
+        this.LOG.logDebug("Ermittle Statistic für " + key);
+        const feedMetadata: FeedMetadata = this.feedMap.get(key) as FeedMetadata;
+        this.LOG.logDebug("Feed gefunden für " + key);
+        if (!feedMetadata.withStatistic) {
+            this.LOG.logDebug("Keine Statistic erlaubt für " + key);
+            return null; // keine Statistic anlegen
+        }
         if (!this.statisticMap.has(key)) {
-            const feedMetadata: FeedMetadata = this.feedMap.get(key) as FeedMetadata;
-            const url = feedMetadata?.url;
-
+            this.LOG.logDebug("Neue Statistik angelegt für " + key);
             this.statisticMap.set(key, {
-                url: url,
+                url: feedMetadata.url,
                 countRequested: 0,
                 countConnected: 0,
                 countResponseOK: 0,
