@@ -3,9 +3,9 @@ import {EMPTY, from, Observable, Subscription, timer} from "rxjs";
 import * as objectHash from "object-hash";
 import axios, {AxiosResponse} from "axios";
 import {catchError, switchMap, tap} from "rxjs/operators";
-import {Logger} from "./logger";
+import {Logger} from "../shared/logger";
 import {Cleaner, FeedMetadata} from "./cleaner";
-import {Statistic} from "./statistic";
+import {Statistic, StatisticData} from "./statistic";
 
 
 class Feeder {
@@ -22,6 +22,16 @@ class Feeder {
         this.LOG.logDebug("Url:" + feedData.url);
         this.LOG.logDebug("Period:" + feedData.period);
         this.LOG.logDebug("Statistik:" + feedData.withStatistic);
+    }
+
+    public getFeeds(): Observable<StatisticData[]> {
+        this.LOG.logDebug("Statistiken angefragt");
+        return this.statistic.getStatistics();
+    }
+
+    public getRankedFeeds() {
+        this.LOG.logDebug("Ranked Statistiken angefragt");
+        return this.statistic.getRankedStatistics();
     }
 
     public unsubscribeFeedFor = (uuid: string, url: string): void => {
@@ -100,11 +110,13 @@ class Feeder {
     };
 
     protected getNewsFeed = (url: string, key: string, period: number, withStatistic: boolean): Subscription => {
-        this.LOG.logDebug("fetch begin für " + url + " mit key " + key);
+        this.LOG.logDebug("Create periodic fetcher for " + url + " with key " + key);
         const feed$: Observable<AxiosResponse> = timer(0, period).pipe(
-            tap(() => console.log("Neue Abfrage von " + url)),
-            switchMap(() => from(axios.get(url)).pipe(catchError(() => EMPTY))),
-            tap(() => this.statistic.feedWasContacted(key))
+            tap(() => {
+                console.log("Kontakte " + url + " für " + key);
+                this.statistic.feedWasContacted(key);
+            }),
+            switchMap(() => from(axios.get(url)).pipe(catchError(() => EMPTY)))
         );
 
         return feed$.subscribe(
@@ -130,7 +142,7 @@ class Feeder {
         this.LOG.logDebug("Suche Metadaten zur Ablage der Responsedaten.");
         const metaData: FeedMetadata = this.feeds.get(key) as FeedMetadata;
         if (metaData) {
-            this.LOG.logDebug("Feed Data: " + JSON.stringify(feed));
+            // this.LOG.logDebug("Feed Data: " + JSON.stringify(feed));
             this.LOG.logDebug("Data received for : " + metaData.url);
             metaData.data = feed;
         } else {
@@ -142,6 +154,15 @@ class Feeder {
 
 const DEFAULT_PERIOD: number = 60000 * 10;
 const feeder: Feeder = new Feeder();
+
+
+export const getFeeds = (): Observable<StatisticData[]> => {
+    return feeder.getFeeds();
+}
+
+export const getRankedFeeds = (): Observable<StatisticData[]> => {
+    return feeder.getRankedFeeds();
+}
 
 export const getFeedData = (url: string, statistic: string): Feed => {
     const withStatistic: boolean = !!statistic;

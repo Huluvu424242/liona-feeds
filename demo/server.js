@@ -6,8 +6,10 @@ const demoUrl = 'https://www.zdf.de/rss/zdf/nachrichten';
 express()
     .use(feeder.addCORSHeader)
     .get('/', (req, res) => res.send(feeder.getFeedData(demoUrl)))
-    .get('/feed/:feedurl', (req, res) => {
-        res.send(feeder.getFeedData(req.params.feedurl, req.query.statistic));
+    .get('/feeds/', (req, res) => {
+        feeder.getRankedFeeds().subscribe(
+            (values) => res.send(values)
+        );
     })
     .get('/feed/', (req, res) => {
         const uuid = req.query.uuid;
