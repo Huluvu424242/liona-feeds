@@ -5,6 +5,7 @@ import axios, {AxiosResponse} from "axios";
 import {catchError, switchMap, tap} from "rxjs/operators";
 import {Logger} from "./logger";
 import {Cleaner, FeedMetadata} from "./cleaner";
+import {Statistic} from "./statistic";
 
 
 class Feeder {
@@ -13,7 +14,8 @@ class Feeder {
 
     protected feeds: Map<string, FeedMetadata> = new Map();
 
-    protected cleaner:Cleaner=new Cleaner(this.feeds); // selbststartend
+    protected cleaner: Cleaner = new Cleaner(this.feeds); // selbststartend
+    protected statistic: Statistic = new Statistic(this.feeds);
 
     protected logMetadata(titel: string, feedData: FeedMetadata) {
         this.LOG.logDebug(titel);
@@ -34,8 +36,9 @@ class Feeder {
     public getFeedData = (url: string, withStatistic: boolean): Feed => {
         this.LOG.logInfo("Eingehende Anfrage an " + url + " und Statistik " + withStatistic);
         const key = objectHash.sha1(url);
+        let feedData: FeedMetadata;
         if (this.feeds.has(key)) {
-            const feedData: FeedMetadata = this.feeds.get(key) as FeedMetadata;
+            feedData = this.feeds.get(key) as FeedMetadata;
             this.logMetadata("Metadaten Alt", feedData);
             // Log lastRequest
             feedData.lastRequested = new Date();
@@ -44,9 +47,8 @@ class Feeder {
                 feedData.withStatistic = withStatistic;
             }
             this.logMetadata("Metadaten Neu", feedData);
-            return feedData?.data;
         } else {
-            const feedData: FeedMetadata = {
+            feedData = {
                 lastRequested: new Date(),
                 url: url,
                 period: DEFAULT_PERIOD,
@@ -56,16 +58,17 @@ class Feeder {
             };
             this.logMetadata("Erstelle Metadaten", feedData);
             this.feeds.set(key, feedData);
-            return {} as Feed;
         }
-
+        this.statistic.feedWasRequested(key);
+        return feedData?.data;
     };
 
     public subscribeFeedDataFor = (uuid: string, url: string, period: number, withStatistic: boolean): Feed => {
         this.LOG.logInfo("Eingehende Anfrage für " + uuid + " an " + url + " mit period: " + period + " und Statistik " + withStatistic);
         const key = objectHash.sha1(uuid + url);
+        let feedData: FeedMetadata
         if (this.feeds.has(key)) {
-            const feedData: FeedMetadata = this.feeds.get(key) as FeedMetadata;
+            feedData = this.feeds.get(key) as FeedMetadata;
             this.logMetadata("Metadaten Alt", feedData);
             // Log lastRequested
             feedData.lastRequested = new Date();
@@ -80,9 +83,8 @@ class Feeder {
                 feedData.subscription = this.getNewsFeed(url, key, period, withStatistic);
             }
             this.logMetadata("Metadaten Neu", feedData);
-            return feedData?.data;
         } else {
-            const feedData: FeedMetadata = {
+            feedData = {
                 lastRequested: new Date(),
                 url: url,
                 period: period,
@@ -92,8 +94,9 @@ class Feeder {
             };
             this.logMetadata("Erstelle Metadaten", feedData);
             this.feeds.set(key, feedData);
-            return {} as Feed;
         }
+        this.statistic.feedWasRequested(key);
+        return feedData?.data;
     };
 
     protected getNewsFeed = (url: string, key: string, period: number, withStatistic: boolean): Subscription => {
@@ -101,6 +104,7 @@ class Feeder {
         const feed$: Observable<AxiosResponse> = timer(0, period).pipe(
             tap(() => console.log("Neue Abfrage von " + url)),
             switchMap(() => from(axios.get(url)).pipe(catchError(() => EMPTY))),
+            tap(() => this.statistic.feedWasContacted(key))
         );
 
         return feed$.subscribe(
@@ -112,6 +116,7 @@ class Feeder {
                 let parser = new FeedMe(true);
                 parser.end(feedResponse.data);
                 const feed = parser.done() as Feed;
+                this.statistic.feedResponseWasOK(key);
                 this.speichereResponsedaten(key, feed);
             }, (error) => {
                 this.LOG.logError(new Error(`Response failed with: ${error}`));
@@ -135,7 +140,7 @@ class Feeder {
 }
 
 
-const DEFAULT_PERIOD: number = 60000*10;
+const DEFAULT_PERIOD: number = 60000 * 10;
 const feeder: Feeder = new Feeder();
 
 export const getFeedData = (url: string, statistic: string): Feed => {
