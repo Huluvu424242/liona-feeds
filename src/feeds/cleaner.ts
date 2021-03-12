@@ -2,7 +2,7 @@
 import {Feed} from "feedme";
 import {from, Subscription, timer} from "rxjs";
 import {filter, switchMap} from "rxjs/operators";
-import {Logger} from "./logger";
+import {Logger} from "../shared/logger";
 
 
 export interface FeedMetadata {

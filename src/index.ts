@@ -1,5 +1,5 @@
-import {getFeedData, getFeedDataFor, unsubscribeFeedFor} from "./feeder";
-import {addCORSHeader} from "./cors";
+import {getFeedData, getFeedDataFor, unsubscribeFeedFor} from "./feeds/feeder";
+import {addCORSHeader} from "./network/cors";
 
 export {
     addCORSHeader,

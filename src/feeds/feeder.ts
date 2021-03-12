@@ -3,7 +3,7 @@ import {EMPTY, from, Observable, Subscription, timer} from "rxjs";
 import * as objectHash from "object-hash";
 import axios, {AxiosResponse} from "axios";
 import {catchError, switchMap, tap} from "rxjs/operators";
-import {Logger} from "./logger";
+import {Logger} from "../shared/logger";
 import {Cleaner, FeedMetadata} from "./cleaner";
 import {Statistic} from "./statistic";
 
