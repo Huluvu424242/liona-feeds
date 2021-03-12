@@ -110,10 +110,12 @@ class Feeder {
     };
 
     protected getNewsFeed = (url: string, key: string, period: number, withStatistic: boolean): Subscription => {
-        this.LOG.logDebug("fetch begin für " + url + " mit key " + key);
+        this.LOG.logDebug("Create periodic fetcher for " + url + " with key " + key);
         const feed$: Observable<AxiosResponse> = timer(0, period).pipe(
-            tap(() => console.log("Neue Abfrage von " + url)),
-            tap(() => this.statistic.feedWasContacted(key)),
+            tap(() => {
+                console.log("Kontakte " + url + " für " + key);
+                this.statistic.feedWasContacted(key);
+            }),
             switchMap(() => from(axios.get(url)).pipe(catchError(() => EMPTY)))
         );
 
