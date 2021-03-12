@@ -5,7 +5,7 @@ import axios, {AxiosResponse} from "axios";
 import {catchError, switchMap, tap} from "rxjs/operators";
 import {Logger} from "../shared/logger";
 import {Cleaner, FeedMetadata} from "./cleaner";
-import {Statistic} from "./statistic";
+import {Statistic, StatisticData} from "./statistic";
 
 
 class Feeder {
@@ -22,6 +22,14 @@ class Feeder {
         this.LOG.logDebug("Url:" + feedData.url);
         this.LOG.logDebug("Period:" + feedData.period);
         this.LOG.logDebug("Statistik:" + feedData.withStatistic);
+    }
+
+    public getFeeds(): Observable<StatisticData[]> {
+        return this.statistic.getStatistics();
+    }
+
+    public getRankedFeeds() {
+        return this.statistic.getRankedStatistics();
     }
 
     public unsubscribeFeedFor = (uuid: string, url: string): void => {
@@ -142,6 +150,15 @@ class Feeder {
 
 const DEFAULT_PERIOD: number = 60000 * 10;
 const feeder: Feeder = new Feeder();
+
+
+export const getFeeds = (): Observable<StatisticData[]> => {
+    return feeder.getFeeds();
+}
+
+export const getRankedFeeds = (): Observable<StatisticData[]> => {
+    return feeder.getRankedFeeds();
+}
 
 export const getFeedData = (url: string, statistic: string): Feed => {
     const withStatistic: boolean = !!statistic;

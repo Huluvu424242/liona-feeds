@@ -1,9 +1,11 @@
-import {getFeedData, getFeedDataFor, unsubscribeFeedFor} from "./feeds/feeder";
+import {getFeedData, getFeedDataFor, getFeeds, getRankedFeeds, unsubscribeFeedFor} from "./feeds/feeder";
 import {addCORSHeader} from "./network/cors";
 
 export {
     addCORSHeader,
     unsubscribeFeedFor,
     getFeedData,
-    getFeedDataFor
+    getFeedDataFor,
+    getFeeds,
+    getRankedFeeds
 }

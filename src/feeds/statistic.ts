@@ -1,10 +1,13 @@
 import {FeedMetadata} from "./cleaner";
+import {from, Observable} from "rxjs";
+import {map, tap, toArray} from "rxjs/operators";
+import {Ranking, Score} from "./ranking";
 
-export interface StatisticData {
+export interface StatisticData extends Score {
     url: string;
     countRequested: number;
     countConnected: number;
-    countResponsOK: number;
+    countResponseOK: number;
 }
 
 export class Statistic {
@@ -15,6 +18,23 @@ export class Statistic {
     public constructor(feedMap: Map<string, FeedMetadata>) {
         this.feedMap = feedMap;
         this.statisticMap = new Map();
+    }
+
+    public getStatistics(): Observable<StatisticData[]> {
+        return from(this.statisticMap.values()).pipe(toArray());
+    }
+
+    public getRankedStatistics(): Observable<StatisticData[]> {
+        return this.getStatistics()
+            .pipe(
+                tap(
+                    (items: StatisticData[]) => {
+                        items.forEach((item: StatisticData) => item.score = item.countRequested * (item.countConnected / item.countResponseOK));
+                    }
+                ),
+                map((items: StatisticData[]) => items.sort(Ranking.sortBestScore))
+            )
+            ;
     }
 
     public feedWasRequested(key: string) {
@@ -29,7 +49,7 @@ export class Statistic {
 
     public feedResponseWasOK(key: string) {
         const statisticData: StatisticData = this.getStatisticData(key);
-        statisticData.countResponsOK++;
+        statisticData.countResponseOK++;
     }
 
     protected getStatisticData(key: string): StatisticData {
@@ -41,7 +61,8 @@ export class Statistic {
                 url: url,
                 countRequested: 0,
                 countConnected: 0,
-                countResponsOK: 0
+                countResponseOK: 0,
+                score: 0
             });
         }
         return this.statisticMap.get(key) as StatisticData;
