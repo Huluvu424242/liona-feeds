@@ -5,7 +5,7 @@
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "index.d.ts",
-  "unpkg": "dist/honey-news/honey-news.js",
+  "unpkg": "dist/liona-feeds/liona-feeds.js",
   "files": [
     "dist/"
   ],
