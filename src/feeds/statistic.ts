@@ -7,7 +7,7 @@ import {Logger} from "../shared/logger";
 export interface StatisticData extends Score {
     url: string;
     countRequested: number;
-    countConnected: number;
+    countContacted: number;
     countResponseOK: number;
 }
 
@@ -34,7 +34,7 @@ export class Statistic {
                     (items: StatisticData[]) => {
                         items.forEach((item: StatisticData) => {
                             this.LOG.logDebug("Compute Statistic for " + JSON.stringify(item));
-                            item.score = item.countRequested * (item.countConnected / item.countResponseOK) || 0;
+                            item.score = item.countRequested * (item.countContacted / item.countResponseOK) || 0;
                             this.LOG.logDebug("Computed Item " + JSON.stringify(item));
                         });
                     }
@@ -53,7 +53,7 @@ export class Statistic {
     public feedWasContacted(key: string) {
         const statisticData: StatisticData | null = this.getStatisticData(key);
         if (statisticData) {
-            statisticData.countConnected++;
+            statisticData.countContacted++;
         }
     }
 
@@ -77,7 +77,7 @@ export class Statistic {
             this.statisticMap.set(key, {
                 url: feedMetadata.url,
                 countRequested: 0,
-                countConnected: 0,
+                countContacted: 0,
                 countResponseOK: 0,
                 score: 0
             });
