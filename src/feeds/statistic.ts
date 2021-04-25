@@ -34,7 +34,7 @@ export class Statistic {
                     (items: StatisticData[]) => {
                         items.forEach((item: StatisticData) => {
                             this.LOG.logDebug("Compute Statistic for " + JSON.stringify(item));
-                            item.score = item.countRequested * (item.countContacted / item.countResponseOK) || 0;
+                            item.score = item.countRequested * (item.countResponseOK / item.countContacted) || 0;
                             this.LOG.logDebug("Computed Item " + JSON.stringify(item));
                         });
                     }
