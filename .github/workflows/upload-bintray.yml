@@ -10,10 +10,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - if: false
     - uses: actions/checkout@v2
     - name: Deploy to Bintray
-      if: "contains(github.event.head_commit.message, 'Release')"
+      if: false
+#      if: "contains(github.event.head_commit.message, 'Release')"
       env:
         BINTRAY_TOKEN: ${{ secrets.BINTRAY_TOKEN }}
       run: |
