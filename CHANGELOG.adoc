@@ -9,7 +9,7 @@ Die Versionierung erfolgt nach http://semver.org/lang/de/[Semantic Versioning].
 
 === Added
 
-*
+* secure issues fixed by versions upgrade of dependencies
 
 === Changed
 
