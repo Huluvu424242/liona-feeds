@@ -6,6 +6,7 @@ Die Versionierung erfolgt nach http://semver.org/lang/de/[Semantic Versioning].
 
 // == [3.1.1] fertiggestellt 2018-05-11
 == [X.X.X] undelivered
+== [2.3.2] fertiggestellt 2021-12-26
 
 === Added
 
