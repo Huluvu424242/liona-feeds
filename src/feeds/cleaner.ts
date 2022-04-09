@@ -2,7 +2,7 @@
 import {Feed} from "feedme";
 import {from, Subscription, timer} from "rxjs";
 import {filter, switchMap} from "rxjs/operators";
-import {Logger} from "../shared/logger";
+import {logService} from "../shared/log-service";
 
 
 export interface FeedMetadata {
@@ -18,8 +18,6 @@ const JOB_PERIOD: number = 60000 * 30; // alle 30 Minuten
 const TIMEOUT_DELTA: number = 60000 * 60; // alle 60 Minuten
 
 export class Cleaner {
-
-    protected LOG: Logger = new Logger();
 
     protected feedMap: Map<string, FeedMetadata>;
     protected subscription: Subscription;
@@ -50,7 +48,7 @@ export class Cleaner {
         return cleanUpJob$.subscribe(
             (key: string) => {
                 this.feedMap.delete(key);
-                this.LOG.logDebug("Subscription für Key " + key + " beendet.");
+                logService.debugMessage("Subscription für Key " + key + " beendet.");
             }
         );
     }
