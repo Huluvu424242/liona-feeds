@@ -17,6 +17,7 @@
     "build": "parcel build src/index.ts",
     "test": "mocha -r ts-node/register src/**/*.spec.ts",
     "test:coverage": "nyc npm run test",
+    "test:reports": "nyc report --reporter=lcov --reporter=text",
     "pruefeVersionen": "npm outdated",
     "check-credits": "npx license-checker --failOn 'AGPL' --production >credits.txt"
   },
