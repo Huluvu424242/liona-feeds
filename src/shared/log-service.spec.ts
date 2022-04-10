@@ -2,7 +2,6 @@ import {LogService, logService} from "./log-service";
 import {spy} from "sinon";
 import {describe, it} from 'mocha';
 import {expect, should, use} from 'chai';
-import {log} from "util";
 
 const sinonChai = require("sinon-chai");
 should();
