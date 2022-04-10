@@ -18,6 +18,7 @@ jobs:
         run: |
           npm i
           npm run build
+          npm run test:coverage
           echo "//npm.pkg.github.com/:_authToken=${NPM_AUTH_TOKEN}" > .npmrc
           echo "registry=https://npm.pkg.github.com/huluvu424242" >> .npmrc
           echo "@huluvu424242:registry=https://npm.pkg.github.com" >> .npmrc

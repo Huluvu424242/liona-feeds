@@ -27,6 +27,7 @@ jobs:
         run: |
           npm i
           npm run build
+          npm run test:coverage
           echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > .npmrc
           npm publish  --access=public
 
