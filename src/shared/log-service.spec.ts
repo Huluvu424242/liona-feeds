@@ -1,8 +1,11 @@
 import {logService} from "./log-service";
+import { expect } from 'chai';
+import 'mocha';
 
-describe('LogService', () =>
-{
-    test('two plus two is four', () => {
-        expect(2 + 2).toBe(4);
+describe('Hello function', () => {
+
+    it('should return hello world', () => {
+        expect(logService).to.equal('Hello world!');
     });
+
 });
