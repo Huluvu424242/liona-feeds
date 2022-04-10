@@ -1,18 +1,8 @@
-// import {FeedMetadata} from "./feedmetadata";
-import {Feed} from "feedme";
 import {from, Subscription, timer} from "rxjs";
 import {filter, switchMap} from "rxjs/operators";
 import {logService} from "../shared/log-service";
+import {FeedMetadata} from "./metadata";
 
-
-export interface FeedMetadata {
-    lastRequested: Date; // contains time in typescript
-    url: string;
-    period: number;
-    withStatistic: boolean;
-    data: Feed;
-    subscription: Subscription;
-}
 
 const JOB_PERIOD: number = 60000 * 30; // alle 30 Minuten
 const TIMEOUT_DELTA: number = 60000 * 60; // alle 60 Minuten

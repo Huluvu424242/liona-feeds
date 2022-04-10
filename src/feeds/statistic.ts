@@ -1,15 +1,9 @@
-import {FeedMetadata} from "./cleaner";
+import {FeedMetadata, StatisticData} from "./metadata";
 import {from, Observable} from "rxjs";
 import {map, tap, toArray} from "rxjs/operators";
 import {Ranking, Score} from "./ranking";
 import {logService} from "../shared/log-service";
 
-export interface StatisticData extends Score {
-    url: string;
-    countRequested: number;
-    countContacted: number;
-    countResponseOK: number;
-}
 
 export class Statistic {
 
