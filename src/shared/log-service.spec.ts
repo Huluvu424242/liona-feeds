@@ -15,7 +15,7 @@ describe('LogService', () => {
     const errorSpy = spy(console, 'error');
     const debugSpy = spy(console, 'debug');
 
-    afterEach( 'Reset: Mock and Spy', ()=> {
+    afterEach('Reset: Mock and Spy', () => {
 
         // restore the original function
         logSpy.restore();
@@ -27,11 +27,11 @@ describe('LogService', () => {
 
 
     it('logMessage logt über console.log', () => {
-        const testParameter = {"error":3};
+        const testParameter = {"error": 3};
 
-        logService.logMessage("hallo",testParameter);
+        logService.logMessage("hallo", testParameter);
 
-        expect(logSpy.calledWithExactly("hallo", [[testParameter]])).to.be.ok;
+        expect(logSpy.calledWithExactly("hallo", testParameter)).to.be.ok;
     });
 
 });

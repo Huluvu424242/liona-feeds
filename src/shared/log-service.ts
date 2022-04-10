@@ -34,28 +34,28 @@ export class LogService {
     if (console && LogService.isLoggingActive) {
       const methodName:string = level.valueOf();
       // @ts-ignore
-      console[methodName](message, params);
+      console[methodName](message, ...params);
     }
   }
 
   public logMessage(message: string, ...params: any[]) {
-    this.log(LogLevel.LOG, message, params);
+    this.log(LogLevel.LOG, message, ...params);
   }
 
   public errorMessage(message: string, ...params: any[]) {
-    this.log(LogLevel.ERROR, message, params);
+    this.log(LogLevel.ERROR, message, ...params);
   }
 
   public warnMessage(message: string, ...params: any[]) {
-    this.log(LogLevel.WARNING, message, params);
+    this.log(LogLevel.WARNING, message, ...params);
   }
 
   public debugMessage(message: string, ...params: any[]) {
-    this.log(LogLevel.DEBUG, message, params);
+    this.log(LogLevel.DEBUG, message, ...params);
   }
 
   public infoMessage(message: string, ...params: any[]) {
-    this.log(LogLevel.INFO, message, params);
+    this.log(LogLevel.INFO, message, ...params);
   }
 
 
