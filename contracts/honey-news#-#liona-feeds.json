@@ -1,0 +1,152 @@
+{
+  "consumer": {
+    "name": "honey-news#"
+  },
+  "interactions": [
+    {
+      "description": "Alle News mit eingeschalteter Statistic",
+      "providerStates": [
+        {
+          "name": "Frage News Feeds ab"
+        }
+      ],
+      "request": {
+        "headers": {
+          "Accept": "application/json"
+        },
+        "matchingRules": {
+          "header": {
+            "Accept": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "method": "GET",
+        "path": "/feed",
+        "query": {
+          "statistic": [
+            "true"
+          ],
+          "url": [
+            "https://www.deutschlandfunk.de/die-nachrichten.353.de.rss"
+          ]
+        }
+      },
+      "response": {
+        "body": {
+          "atom:link": {
+            "href": "https://www.deutschlandfunk.de/nachrichten-index-22904.rss",
+            "rel": "self",
+            "type": "application/rss+xml"
+          },
+          "category": "Info",
+          "copyright": "Deutschlandradio - deutschlandradio.de",
+          "description": ">",
+          "image": {
+            "link": "https://www.deutschlandfunk.de/nachrichten-index-22904.html",
+            "title": "Deutschlandfunk - Fortlaufende Nachrichten vom 04. Januar 2022",
+            "url": "https://assets.deutschlandfunk.de/FALLBACK-IMAGE/1920x1920.png?t=1600291117115"
+          },
+          "items": [
+            {
+              "description": "<img src=\"https://assets.deutschlandfunk.de/25d736b4-a415-463b-a4fe-35a5ac44acdc/1920x1920.jpg?t=1639821123437\" alt=\"Sternenhimmel über einer verschneiten Landschaft\" title=\"Sternenhimmel über einer verschneiten Landschaft\" width=\"1920\" height=\"1920\" border=\"0\" align=\"left\" hspace=\"4\" vspace=\"4\"/>Der Wetterbericht, die Lage: Am Rand eines Tiefdruckkomplexes über Nordeuropa wird zunächst milde und feuchte Atlantikluft herangeführt. Von Norden greift eine Kaltfront mit polarer Meeresluft über.<br clear=\"all\"/><br/><p><br/></p>",
+              "guid": {
+                "ispermalink": "false",
+                "text": "nachts-im-norden-meist-trocken-sonst-regen-und-schnee-100"
+              },
+              "link": "https://www.deutschlandfunk.de/nachts-im-norden-meist-trocken-sonst-regen-und-schnee-100.html",
+              "pubdate": "Tue, 04 Jan 2022 23:59:00 +0100",
+              "text": "\n",
+              "title": "Nachts im Norden meist trocken, sonst Regen und Schnee"
+            }
+          ],
+          "language": "de-DE",
+          "lastbuilddate": "Tue, 04 Jan 2022 19:56:16 +0100",
+          "link": "https://www.deutschlandfunk.de/nachrichten-index-22904.html",
+          "pubdate": "Tue, 04 Jan 2022 19:56:16 +0100",
+          "title": "Deutschlandfunk - Fortlaufende Nachrichten vom 04. Januar 2022",
+          "ttl": "60",
+          "type": "rss 2.0"
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "Zu allen Feeds:",
+      "providerStates": [
+        {
+          "name": "Frage Statistik ab"
+        }
+      ],
+      "request": {
+        "headers": {
+          "Accept": "application/json"
+        },
+        "matchingRules": {
+          "header": {
+            "Accept": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "method": "GET",
+        "path": "/feeds"
+      },
+      "response": {
+        "body": [
+          {
+            "countContacted": 0,
+            "countRequested": 4,
+            "countResponseOK": 1,
+            "url": "https://www.presseportal.de/rss/presseportal.rss2"
+          },
+          {
+            "countContacted": 1,
+            "countRequested": 4,
+            "countResponseOK": 1,
+            "score": 0,
+            "url": "https://www.tagesschau.de/xml/atom/"
+          },
+          {
+            "countContacted": 1,
+            "countRequested": 4,
+            "countResponseOK": 1,
+            "score": 4,
+            "url": "https://dev.to/feed/"
+          }
+        ],
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "status": 200
+      }
+    }
+  ],
+  "metadata": {
+    "pactJs": {
+      "version": "10.0.0-beta.54"
+    },
+    "pactRust": {
+      "version": "0.9.4"
+    },
+    "pactSpecification": {
+      "version": "3.0.0"
+    }
+  },
+  "provider": {
+    "name": "#liona-feeds"
+  }
+}
