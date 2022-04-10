@@ -1,4 +1,4 @@
-import {logService} from "./log-service";
+import {LogService, logService} from "./log-service";
 import {spy} from "sinon";
 import {describe, it} from 'mocha';
 import {expect, should, use} from 'chai';
@@ -37,7 +37,7 @@ describe('LogService', () => {
     describe('Aktives Logging', () => {
 
         beforeEach('aktiviere Logging', () => {
-            logService.enableLogging();
+            LogService.enableLogging();
         });
 
         it('errorMessage logt über console.error', () => {
@@ -99,7 +99,7 @@ describe('LogService', () => {
         const nichtsGeloggt: () => boolean = () => (errorSpy.called && warningSpy.called && debugSpy.called && infoSpy.called && logSpy.called);
 
         beforeEach('deaktiviere Logging', () => {
-            logService.disableLogging();
+            LogService.disableLogging();
         })
 
         it('errorMessage logt nicht bei deaktivierten Logging', () => {
