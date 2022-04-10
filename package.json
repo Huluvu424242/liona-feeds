@@ -16,7 +16,7 @@
     "check": "tsc --noEmit",
     "build": "parcel build src/index.ts",
     "test": "mocha -r ts-node/register src/**/*.spec.ts",
-    "test:coverage": "nyc npm run test |tap-nyc >coverage.txt",
+    "test:coverage": "nyc npm run test |tap-nyc | tee coverage.txt",
     "test:reports": "nyc report --reporter=lcov --reporter=text",
     "pruefeVersionen": "npm outdated",
     "check-credits": "npx license-checker --failOn 'AGPL' --production >credits.txt"

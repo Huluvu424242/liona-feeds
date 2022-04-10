@@ -26,12 +26,40 @@ describe('LogService', () => {
     });
 
 
-    it('logMessage logt über console.log', () => {
-        const testParameter = {"error": 3};
+    describe('Aktives Logging',()=>{
 
-        logService.logMessage("hallo", testParameter);
+        beforeEach('aktiviere Logging',()=>{
+            logService.enableLogging();
+        });
 
-        expect(logSpy.calledWithExactly("hallo", testParameter)).to.be.ok;
-    });
+        it('logMessage logt über console.log', () => {
+            const testParameter = {"error": 3};
+
+            logService.logMessage("hallo", testParameter);
+
+            expect(logSpy.calledWithExactly("hallo", testParameter)).to.be.ok;
+        });
+    })
+
+    describe('Deaktiviertes Logging',()=>{
+
+        beforeEach('deaktiviere Logging',()=>{
+            logService.disableLogging();
+        })
+
+
+
+        it('logMessage logt über console.log', () => {
+            const testParameter = {"error": 3};
+
+            logService.logMessage("hallo", testParameter);
+
+            expect(logSpy.calledWithExactly("hallo", testParameter)).to.be.ok;
+        });
+
+    })
+
+
+
 
 });
