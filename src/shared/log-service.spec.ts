@@ -15,6 +15,14 @@ describe('LogService', () => {
     const errorSpy = spy(console, 'error');
     const debugSpy = spy(console, 'debug');
 
+    beforeEach('deaktiviere Logging',()=>{
+        logSpy.resetHistory();
+        infoSpy.resetHistory();
+        warningSpy.resetHistory();
+        errorSpy.resetHistory();
+        debugSpy.resetHistory();
+    })
+
     afterEach('Reset: Mock and Spy', () => {
 
         // restore the original function
@@ -24,7 +32,6 @@ describe('LogService', () => {
         errorSpy.restore();
         debugSpy.restore();
     });
-
 
     describe('Aktives Logging',()=>{
 
@@ -47,14 +54,12 @@ describe('LogService', () => {
             logService.disableLogging();
         })
 
-
-
         it('logMessage logt über console.log', () => {
-            const testParameter = {"error": 3};
+            const testParameter = {"error": 4};
 
-            logService.logMessage("hallo", testParameter);
+            logService.logMessage("hello", testParameter);
 
-            expect(logSpy.calledWithExactly("hallo", testParameter)).to.be.ok;
+            expect(logSpy.called).to.be.false;
         });
 
     })
