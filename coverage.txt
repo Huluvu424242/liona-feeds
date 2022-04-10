@@ -1,5 +1,10 @@
     > @huluvu424242/liona-feeds@2.3.3 test
     > mocha -r ts-node/register src/**/*.spec.ts
+      Ranking
+        Gültige Vergleiche
+          √ sortBestScore(A,B) mit A<B  
+          √ sortBestScore(A,B) mit A>B  
+          √ sortBestScore(A,B) mit A=B  
       LogService
         Aktives Logging
           √ errorMessage logt über console.error
@@ -16,11 +21,11 @@
           √ debugMessage logt nicht bei deaktivierten Logging
           √ infoMessage logt nicht bei deaktivierten Logging
           √ logMessage logt nicht bei deaktivierten Logging
-      10 passing (9ms)
+      13 passing (10ms)
     ----------------------------------|---------|----------|---------|---------|-------------------
     File                              | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
     ----------------------------------|---------|----------|---------|---------|-------------------
-    All files                         |     1.9 |     1.59 |    6.21 |    3.96 |                   
+    All files                         |    2.47 |      2.5 |    6.83 |    5.14 |                   
      liona-feeds                      |       0 |        0 |       0 |       0 |                   
       cleaner.ts                      |       0 |        0 |       0 |       0 | 17-56             
       cors.ts                         |       0 |        0 |       0 |       0 | 2-8               
@@ -37,10 +42,10 @@
       server.mjs                      |       0 |        0 |       0 |       0 | 5-16              
      liona-feeds/src                  |       0 |        0 |       0 |       0 |                   
       index.ts                        |       0 |        0 |       0 |       0 |                   
-     liona-feeds/src/feeds            |       0 |        0 |       0 |       0 |                   
+     liona-feeds/src/feeds            |    4.25 |    10.52 |    2.85 |    4.31 |                   
       cleaner.ts                      |       0 |        0 |       0 |       0 | 17-51             
       feeder.ts                       |       0 |        0 |       0 |       0 | 13-177            
-      ranking.ts                      |       0 |        0 |       0 |       0 | 8-12              
+      ranking.ts                      |     100 |      100 |     100 |     100 |                   
       statistic.ts                    |       0 |        0 |       0 |       0 | 20-83             
      liona-feeds/src/network          |       0 |        0 |       0 |       0 |                   
       cors.ts                         |       0 |        0 |       0 |       0 | 2-8               
