@@ -1,0 +1,37 @@
+    > @huluvu424242/liona-feeds@2.3.3 test
+    > mocha -r ts-node/register src/**/*.spec.ts
+      LogService
+    hallo { error: 3 }
+        √ logMessage logt über console.log
+      1 passing (5ms)
+    ----------------------------------|---------|----------|---------|---------|-------------------
+    File                              | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+    ----------------------------------|---------|----------|---------|---------|-------------------
+    All files                         |    1.32 |     1.35 |    2.46 |    2.76 |                   
+     liona-feeds                      |       0 |        0 |       0 |       0 |                   
+      cleaner.ts                      |       0 |        0 |       0 |       0 | 17-56             
+      cors.ts                         |       0 |        0 |       0 |       0 | 2-8               
+      feeder.ts                       |       0 |        0 |       0 |       0 | 11-177            
+      log-service.ts                  |       0 |        0 |       0 |       0 | 1-66              
+      ranking.ts                      |       0 |        0 |       0 |       0 | 5-16              
+      statistic.ts                    |       0 |        0 |       0 |       0 | 14-86             
+     liona-feeds/coverage/lcov-report |       0 |        0 |       0 |       0 |                   
+      block-navigation.js             |       0 |        0 |       0 |       0 | 2-87              
+      prettify.js                     |       0 |        0 |       0 |       0 | 2                 
+      sorter.js                       |       0 |        0 |       0 |       0 | 2-196             
+     liona-feeds/demo                 |       0 |        0 |       0 |       0 |                   
+      server.js                       |       0 |        0 |       0 |       0 | 1-27              
+      server.mjs                      |       0 |        0 |       0 |       0 | 5-16              
+     liona-feeds/src                  |       0 |        0 |       0 |       0 |                   
+      index.ts                        |       0 |        0 |       0 |       0 |                   
+     liona-feeds/src/feeds            |       0 |        0 |       0 |       0 |                   
+      cleaner.ts                      |       0 |        0 |       0 |       0 | 17-51             
+      feeder.ts                       |       0 |        0 |       0 |       0 | 13-177            
+      ranking.ts                      |       0 |        0 |       0 |       0 | 8-12              
+      statistic.ts                    |       0 |        0 |       0 |       0 | 20-83             
+     liona-feeds/src/network          |       0 |        0 |       0 |       0 |                   
+      cors.ts                         |       0 |        0 |       0 |       0 | 2-8               
+     liona-feeds/src/shared           |   60.86 |    66.66 |   36.36 |   60.86 |                   
+      log-service.ts                  |   60.86 |    66.66 |   36.36 |   60.86 | 14-25,46-58       
+    ----------------------------------|---------|----------|---------|---------|-------------------
+
