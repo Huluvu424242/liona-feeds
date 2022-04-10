@@ -2,15 +2,25 @@
     > mocha -r ts-node/register src/**/*.spec.ts
       LogService
         Aktives Logging
-    hallo { error: 3 }
+          √ errorMessage logt über console.error
+          √ warnMessage logt über console.warn
+    DEBUG { debug: 3 }
+          √ debugMessage logt über console.debug
+    INFO { info: 4 }
+          √ infoMessage logt über console.info
+    LOG { log: 5 }
           √ logMessage logt über console.log
         Deaktiviertes Logging
-          √ logMessage logt über console.log
-      2 passing (5ms)
+          √ errorMessage logt nicht bei deaktivierten Logging
+          √ warnMessage logt nicht bei deaktivierten Logging
+          √ debugMessage logt nicht bei deaktivierten Logging
+          √ infoMessage logt nicht bei deaktivierten Logging
+          √ logMessage logt nicht bei deaktivierten Logging
+      10 passing (9ms)
     ----------------------------------|---------|----------|---------|---------|-------------------
     File                              | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
     ----------------------------------|---------|----------|---------|---------|-------------------
-    All files                         |    1.51 |     1.58 |     3.7 |    3.15 |                   
+    All files                         |    1.89 |     1.58 |    6.17 |    3.94 |                   
      liona-feeds                      |       0 |        0 |       0 |       0 |                   
       cleaner.ts                      |       0 |        0 |       0 |       0 | 17-56             
       cors.ts                         |       0 |        0 |       0 |       0 | 2-8               
@@ -34,7 +44,7 @@
       statistic.ts                    |       0 |        0 |       0 |       0 | 20-83             
      liona-feeds/src/network          |       0 |        0 |       0 |       0 |                   
       cors.ts                         |       0 |        0 |       0 |       0 | 2-8               
-     liona-feeds/src/shared           |   69.56 |    77.77 |   54.54 |   69.56 |                   
-      log-service.ts                  |   69.56 |    77.77 |   54.54 |   69.56 | 22-25,46-58       
+     liona-feeds/src/shared           |   86.95 |    77.77 |    90.9 |   86.95 |                   
+      log-service.ts                  |   86.95 |    77.77 |    90.9 |   86.95 | 22-25             
     ----------------------------------|---------|----------|---------|---------|-------------------
 
