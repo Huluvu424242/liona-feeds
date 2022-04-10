@@ -39,8 +39,10 @@ describe('LogService', () => {
 
         it('Initialisierung erzeugt eine Subscription auf den CleanJobStream.', () => {
             expect(cleaner["subscription"]).to.be.ok;
-            expect(getPropertyValue(cleaner,"subscription")).not.to.be.null;
-            expect(getPropertyValue(cleaner,"subscription")).not.to.be.undefined;
+            const cleanerSubscription:Subscription= getPropertyValue(cleaner,"subscription");
+            expect(cleanerSubscription).not.to.be.null;
+            expect(cleanerSubscription).not.to.be.undefined;
+            expect(cleanerSubscription).not.to.be.undefined;
         });
 
     })
