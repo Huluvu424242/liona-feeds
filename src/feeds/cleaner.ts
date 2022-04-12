@@ -10,14 +10,25 @@ export class Cleaner {
 
     protected feedMap: Map<string, FeedMetadata>;
     protected jobPeriod: number;
+    /**
+     * Zeitspanne ohne Anfragen, nach der der Feed aus der Liste entfernt wird
+     * @protected
+     */
     protected timeoutDelta: number;
-    protected subscription: Subscription;
 
+    protected cleanUpJobSubscription: Subscription;
+
+    /**
+     * Erzeugt eine Cleaner Instanz
+     * @param feedMap Zuordnung von FeedKey auf FeedMetadaten
+     * @param jobPeriod Zeitintervall nach dem ein neuer Reinigungsdurchgang anläuft
+     * @param timeoutDelta Zeitgrenze nach deren Überschreiten ein Feed ohne Anfragen im Zeitbereich entfernt wird.
+     */
     public constructor(feedMap: Map<string, FeedMetadata>, jobPeriod: number = JOB_PERIOD, timeoutDelta: number = TIMEOUT_DELTA) {
         this.feedMap = feedMap;
         this.jobPeriod = jobPeriod;
         this.timeoutDelta = timeoutDelta;
-        this.subscription = this.feedKeysToRemove$().subscribe({
+        this.cleanUpJobSubscription = this.feedKeysToRemove$().subscribe({
                 next: (key: string) => this.removeAndCleanUpKey(key),
                 error: (error: any) => logService.errorMessage(error),
                 complete: () => logService.infoMessage("Subscription of cleanUpJob finished")
