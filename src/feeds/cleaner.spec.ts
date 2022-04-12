@@ -73,6 +73,7 @@ describe('Cleaner', () => {
 
             expect(subscriptionSpy.called).to.be.true;
 
+            subscriptionSpy.restore();
         });
 
     });
