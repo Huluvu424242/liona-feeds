@@ -50,7 +50,7 @@ describe('Cleaner', () => {
 
             const cleanUpJobSubscriptionAfterSubscribe=getPropertyValue<Subscription>(cleaner,"cleanUpJobSubscription");
             expect(cleanUpJobSubscriptionAfterSubscribe).to.be.ok;
-            expect(cleanUpJobSubscriptionAfterSubscribe).to.be.deep.eq(cleanUpJobSubscriptionBeforeSubscribe);
+            expect(cleanUpJobSubscriptionAfterSubscribe===cleanUpJobSubscriptionBeforeSubscribe).not.to.be.true;
 
             expect(errorMessageSpy.called).to.be.false;
             expect(debugMessageSpy.calledWithExactly("Feed feed1 aus Feedliste entfernt.")).to.be.true;
