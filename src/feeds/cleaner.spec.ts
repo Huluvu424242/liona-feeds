@@ -15,22 +15,21 @@ describe('Cleaner', () => {
         url: "http://feed1.de",
         // lastRequested: new Date(Date.now() - 5000),
     };
+    const feedMap: Map<string, FeedMetadata> = new Map();
 
     describe('Marble Tests', () => {
 
         let testScheduler: TestScheduler;
 
         beforeEach('Erstelle TestSheduler', () => {
+            feedMap.set("feed1", metaData1);
+            feedMap.set("feed2", metaData2);
             testScheduler = new TestScheduler((actual, expected) => {
                 expect(actual).to.be.deep.eq(expected);
             });
         });
 
-        it('Generiere längere Folge von Keys als Zuordnungen in der Map vorhanden sind, ohne vorher zu completen ', () => {
-            const feedMap: Map<string, FeedMetadata> = new Map();
-            feedMap.set("feed1", metaData1);
-            feedMap.set("feed2", metaData2);
-
+        it('Generiere längere Key Folgen als Zuordnungen in der Feed Map vorhanden sind, ohne vorher den Stream zu schließen ', () => {
 
             testScheduler.run(({expectObservable}) => {
                 const cleaner: Cleaner = new Cleaner(feedMap, 1000, 10000);

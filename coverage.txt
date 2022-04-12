@@ -1,5 +1,8 @@
     > @huluvu424242/liona-feeds@2.3.3 test
     > mocha -r ts-node/register src/**/*.spec.ts
+      Cleaner
+        Marble Tests
+          √ Generiere längere Key Folgen als Zuordnungen in der Feed Map vorhanden sind, ohne vorher den Stream zu schließen 
       Ranking
         Gültige Vergleiche
           √ sortBestScore(A,B) mit A<B  
@@ -21,18 +24,18 @@
           √ debugMessage logt nicht bei deaktivierten Logging
           √ infoMessage logt nicht bei deaktivierten Logging
           √ logMessage logt nicht bei deaktivierten Logging
-      13 passing (9ms)
+      14 passing (14ms)
     ----------------------------------|---------|----------|---------|---------|-------------------
     File                              | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
     ----------------------------------|---------|----------|---------|---------|-------------------
-    All files                         |    2.47 |      2.5 |    6.83 |    5.14 |                   
+    All files                         |    3.41 |     2.44 |    7.86 |    6.95 |                   
      liona-feeds                      |       0 |        0 |       0 |       0 |                   
-      cleaner.ts                      |       0 |        0 |       0 |       0 | 17-56             
+      cleaner.ts                      |       0 |        0 |       0 |       0 | 6-81              
       cors.ts                         |       0 |        0 |       0 |       0 | 2-8               
-      feeder.ts                       |       0 |        0 |       0 |       0 | 11-177            
-      log-service.ts                  |       0 |        0 |       0 |       0 | 1-66              
+      feeder.ts                       |       0 |        0 |       0 |       0 | 12-183            
+      log-service.ts                  |       0 |        0 |       0 |       0 | 1-56              
       ranking.ts                      |       0 |        0 |       0 |       0 | 5-16              
-      statistic.ts                    |       0 |        0 |       0 |       0 | 14-86             
+      statistic.ts                    |       0 |        0 |       0 |       0 | 8-80              
      liona-feeds/coverage/lcov-report |       0 |        0 |       0 |       0 |                   
       block-navigation.js             |       0 |        0 |       0 |       0 | 2-87              
       prettify.js                     |       0 |        0 |       0 |       0 | 2                 
@@ -42,15 +45,16 @@
       server.mjs                      |       0 |        0 |       0 |       0 | 5-16              
      liona-feeds/src                  |       0 |        0 |       0 |       0 |                   
       index.ts                        |       0 |        0 |       0 |       0 |                   
-     liona-feeds/src/feeds            |    4.25 |    10.52 |    2.85 |    4.31 |                   
-      cleaner.ts                      |       0 |        0 |       0 |       0 | 7-41              
-      feeder.ts                       |       0 |        0 |       0 |       0 | 13-177            
+     liona-feeds/src/feeds            |   10.82 |     9.52 |    9.09 |   11.03 |                   
+      cleaner.ts                      |   34.37 |        0 |   23.07 |   36.66 | 35-50,64-82       
+      feeder.ts                       |       0 |        0 |       0 |       0 | 14-183            
       metadata.ts                     |       0 |        0 |       0 |       0 |                   
       ranking.ts                      |     100 |      100 |     100 |     100 |                   
       statistic.ts                    |       0 |        0 |       0 |       0 | 14-77             
      liona-feeds/src/network          |       0 |        0 |       0 |       0 |                   
       cors.ts                         |       0 |        0 |       0 |       0 | 2-8               
-     liona-feeds/src/shared           |     100 |      100 |     100 |     100 |                   
+     liona-feeds/src/shared           |    90.9 |      100 |    90.9 |    90.9 |                   
       log-service.ts                  |     100 |      100 |     100 |     100 |                   
+      test-utils.ts                   |       0 |      100 |       0 |       0 | 1-2               
     ----------------------------------|---------|----------|---------|---------|-------------------
 
