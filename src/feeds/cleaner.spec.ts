@@ -74,8 +74,7 @@ describe('Cleaner', () => {
             subscriptionSpy.restore();
         });
 
-        it('tooFewRequested works correct', () => {
-
+        it('tooFewRequested works correct with one value \< limit and one value \> limit', () => {
             metaData1.lastRequested = new Date(Date.now() - 10000);
             metaData2.lastRequested = new Date(Date.now() - 5000);
             feedMapFake.set("feed1", metaData1);
@@ -84,8 +83,30 @@ describe('Cleaner', () => {
 
             expect(cleaner.tooFewRequested("feed1")).to.be.true;
             expect(cleaner.tooFewRequested("feed2")).to.be.false;
-
         })
+
+        it('tooFewRequested works correct with both values \< limit ', () => {
+            metaData1.lastRequested = new Date(Date.now() - 5000);
+            metaData2.lastRequested = new Date(Date.now() - 5000);
+            feedMapFake.set("feed1", metaData1);
+            feedMapFake.set("feed2", metaData2);
+            const cleaner: Cleaner = new Cleaner(feedMapFake,0,6000);
+
+            expect(cleaner.tooFewRequested("feed1")).to.be.false;
+            expect(cleaner.tooFewRequested("feed2")).to.be.false;
+        })
+
+        it('tooFewRequested works correct with both values \> limit ', () => {
+            metaData1.lastRequested = new Date(Date.now() - 10000);
+            metaData2.lastRequested = new Date(Date.now() - 10000);
+            feedMapFake.set("feed1", metaData1);
+            feedMapFake.set("feed2", metaData2);
+            const cleaner: Cleaner = new Cleaner(feedMapFake,0,6000);
+
+            expect(cleaner.tooFewRequested("feed1")).to.be.true;
+            expect(cleaner.tooFewRequested("feed2")).to.be.true;
+        })
+
 
     });
 
