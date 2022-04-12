@@ -1,51 +1,25 @@
-import {Cleaner} from "./cleaner";
-import {spy} from "sinon";
-import {describe, it} from 'mocha';
-import {expect, should, use} from 'chai';
-import {FeedMetadata} from "./metadata";
-import {getPropertyValue} from "../shared/test-utils";
-import {Subscription} from "rxjs";
+import {describe, it} from "mocha";
+import {TestScheduler} from "rxjs/testing";
+import {interval, take} from "rxjs";
+import {expect} from "chai";
 
-const sinonChai = require("sinon-chai");
-should();
-use(sinonChai);
+describe('Cleaner', () => {
 
-describe('LogService', () => {
-
-    const logSpy = spy(console, 'log');
+    let testScheduler: TestScheduler;
 
 
-    beforeEach('deaktiviere Logging', () => {
-        logSpy.resetHistory();
-
-    })
-
-    after('Reset: Mock and Spy', () => {
-
-        // restore the original function
-        logSpy.restore();
-
+    beforeEach('Erstelle TestSheduler', () => {
+        testScheduler = new TestScheduler((actual, expected) => {
+            expect(actual).to.be.deep.eq(expected);
+        });
     });
 
-    const feedMapFake = new Map<string, FeedMetadata>();
-    let cleaner: Cleaner;
-
-
-    describe('Gültige Benutzung', () => {
-
-        beforeEach('erzeuge cleaner Instanz', () => {
-            cleaner = new Cleaner(feedMapFake);
+    it('Generiere 5 Feeds', () => {
+        testScheduler.run(({expectObservable}) => {
+            const expectedMarble = '1s a 999ms b 999ms c 999ms d 999ms (e|)';
+            const exprectedValues = {a: 0, b: 1, c: 2, d: 3, e: 4};
+            const source$ = interval(1000).pipe(take(5));
+            expectObservable(source$).toBe(expectedMarble, exprectedValues);
         });
-
-        it('Initialisierung erzeugt eine Subscription auf den CleanJobStream.', () => {
-            expect(cleaner["subscription"]).to.be.ok;
-            const cleanerSubscription:Subscription= getPropertyValue(cleaner,"subscription");
-            expect(cleanerSubscription).not.to.be.null;
-            expect(cleanerSubscription).not.to.be.undefined;
-            expect(cleanerSubscription).not.to.be.undefined;
-        });
-
-    })
-
-
+    });
 });
