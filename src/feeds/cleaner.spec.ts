@@ -3,7 +3,8 @@ import {TestScheduler} from "rxjs/testing";
 import {expect} from "chai";
 import {Cleaner} from "./cleaner";
 import {FeedMetadata} from "./metadata";
-import {take} from "rxjs";
+import {EMPTY, take} from "rxjs";
+import {getPropertyValue} from "../shared/test-utils";
 
 describe('Cleaner', () => {
 
@@ -16,6 +17,26 @@ describe('Cleaner', () => {
         // lastRequested: new Date(Date.now() - 5000),
     };
     const feedMap: Map<string, FeedMetadata> = new Map();
+
+    beforeEach('reset Mocks', () => {
+        feedMap.clear();
+        expect(feedMap.size).to.be.eq(0);
+    });
+
+    describe('Mocked Unit Tests', () => {
+
+        it('Instanzen werdne korrekt initialisiert', () => {
+
+            const cleaner: Cleaner = new Cleaner(feedMap);
+
+            expect(getPropertyValue(cleaner,"feedMap")).to.be.deep.eq(feedMap);
+            expect(getPropertyValue(cleaner,"jobPeriod")).to.be.eq(Cleaner.CLEANER_JOB_PERIOD);
+            expect(getPropertyValue(cleaner,"timeoutDelta")).to.be.eq(Cleaner.CLEANER_TIMEOUT_DELTA);
+            expect(getPropertyValue(cleaner,"cleanUpJobSubscription")).to.be.ok;
+        })
+
+
+    });
 
     describe('Marble Tests', () => {
 
