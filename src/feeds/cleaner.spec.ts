@@ -12,24 +12,22 @@ describe('Cleaner', () => {
 
     const metaData1: FeedMetadata = {
         url: "http://feed1.de",
-        // lastRequested: new Date(Date.now() - 10000),
     };
     const metaData2: FeedMetadata = {
         url: "http://feed1.de",
-        // lastRequested: new Date(Date.now() - 5000),
     };
-    const feedMap: Map<string, FeedMetadata> = new Map();
+    let feedMapFake: Map<string, FeedMetadata>;
 
     beforeEach('reset Mocks', () => {
-        feedMap.clear();
-        expect(feedMap.size).to.be.eq(0);
+        feedMapFake = new Map();
+        expect(feedMapFake.size).to.be.eq(0);
     });
 
     describe('Mocked Unit Tests', () => {
 
         it('Cleaner Instanzen werdne korrekt initialisiert', () => {
-            const cleaner: Cleaner = new Cleaner(feedMap);
-            expect(getPropertyValue(cleaner, "feedMap")).to.be.deep.eq(feedMap);
+            const cleaner: Cleaner = new Cleaner(feedMapFake);
+            expect(getPropertyValue(cleaner, "feedMap")).to.be.deep.eq(feedMapFake);
             expect(getPropertyValue(cleaner, "jobPeriod")).to.be.eq(Cleaner.CLEANER_JOB_PERIOD);
             expect(getPropertyValue(cleaner, "timeoutDelta")).to.be.eq(Cleaner.CLEANER_TIMEOUT_DELTA);
             expect(getPropertyValue(cleaner, "cleanUpJobSubscription")).to.be.ok;
@@ -40,7 +38,7 @@ describe('Cleaner', () => {
             const debugMessageSpy = spy(logService, 'debugMessage');
             const infoMessageSpy = spy(logService, 'infoMessage');
 
-            const cleaner: Cleaner = new Cleaner(feedMap);
+            const cleaner: Cleaner = new Cleaner(feedMapFake);
             cleaner.feedKeysToRemove$ = () => of("feed1", "feed2");
 
             const cleanUpJobSubscriptionBeforeSubscribe = getPropertyValue<Subscription>(cleaner, "cleanUpJobSubscription");
@@ -63,7 +61,7 @@ describe('Cleaner', () => {
         })
 
         it('Unsubscribe of cleaner job works correct.', () => {
-            const cleaner: Cleaner = new Cleaner(feedMap);
+            const cleaner: Cleaner = new Cleaner(feedMapFake);
             const cleanUpJobSubscription: Subscription = getPropertyValue(cleaner, "cleanUpJobSubscription");
             const subscriptionSpy = spy(cleanUpJobSubscription, "unsubscribe");
 
@@ -76,6 +74,19 @@ describe('Cleaner', () => {
             subscriptionSpy.restore();
         });
 
+        it('tooFewRequested works correct', () => {
+
+            metaData1.lastRequested = new Date(Date.now() - 10000);
+            metaData2.lastRequested = new Date(Date.now() - 5000);
+            feedMapFake.set("feed1", metaData1);
+            feedMapFake.set("feed2", metaData2);
+            const cleaner: Cleaner = new Cleaner(feedMapFake,0,6000);
+
+            expect(cleaner.tooFewRequested("feed1")).to.be.true;
+            expect(cleaner.tooFewRequested("feed2")).to.be.false;
+
+        })
+
     });
 
     describe('Marble Tests', () => {
@@ -83,8 +94,8 @@ describe('Cleaner', () => {
         let testScheduler: TestScheduler;
 
         beforeEach('Erstelle TestSheduler', () => {
-            feedMap.set("feed1", metaData1);
-            feedMap.set("feed2", metaData2);
+            feedMapFake.set("feed1", metaData1);
+            feedMapFake.set("feed2", metaData2);
             testScheduler = new TestScheduler((actual, expected) => {
                 expect(actual).to.be.deep.eq(expected);
             });
@@ -93,7 +104,7 @@ describe('Cleaner', () => {
         it('Generiere längere Key Folgen als Zuordnungen in der Feed Map vorhanden sind, ohne vorher den Stream zu schließen ', () => {
 
             testScheduler.run(({expectObservable}) => {
-                const cleaner: Cleaner = new Cleaner(feedMap, 1000, 10000);
+                const cleaner: Cleaner = new Cleaner(feedMapFake, 1000, 10000);
                 const expectedMarble = '(ab) 996ms (ab) 996ms (ab|)';
                 const exprectedValues = {a: "feed1", b: "feed2"};
                 const source$ = cleaner.keylistOfFeeds$().pipe(take(6));

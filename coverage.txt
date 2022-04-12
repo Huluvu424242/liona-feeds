@@ -1,6 +1,13 @@
     > @huluvu424242/liona-feeds@2.3.3 test
     > mocha -r ts-node/register src/**/*.spec.ts
       Cleaner
+        Mocked Unit Tests
+          √ Cleaner Instanzen werdne korrekt initialisiert
+    Feed feed1 aus Feedliste entfernt.
+    Feed feed2 aus Feedliste entfernt.
+    Subscription of cleanUpJob finished
+          √ Subscribe of cleaner job works correct.
+          √ Unsubscribe of cleaner job works correct.
         Marble Tests
           √ Generiere längere Key Folgen als Zuordnungen in der Feed Map vorhanden sind, ohne vorher den Stream zu schließen 
       Ranking
@@ -24,37 +31,37 @@
           √ debugMessage logt nicht bei deaktivierten Logging
           √ infoMessage logt nicht bei deaktivierten Logging
           √ logMessage logt nicht bei deaktivierten Logging
-      14 passing (14ms)
-    ----------------------------------|---------|----------|---------|---------|-------------------
-    File                              | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
-    ----------------------------------|---------|----------|---------|---------|-------------------
-    All files                         |    3.41 |     2.44 |    7.86 |    6.95 |                   
-     liona-feeds                      |       0 |        0 |       0 |       0 |                   
-      cleaner.ts                      |       0 |        0 |       0 |       0 | 6-81              
-      cors.ts                         |       0 |        0 |       0 |       0 | 2-8               
-      feeder.ts                       |       0 |        0 |       0 |       0 | 12-183            
-      log-service.ts                  |       0 |        0 |       0 |       0 | 1-56              
-      ranking.ts                      |       0 |        0 |       0 |       0 | 5-16              
-      statistic.ts                    |       0 |        0 |       0 |       0 | 8-80              
-     liona-feeds/coverage/lcov-report |       0 |        0 |       0 |       0 |                   
-      block-navigation.js             |       0 |        0 |       0 |       0 | 2-87              
-      prettify.js                     |       0 |        0 |       0 |       0 | 2                 
-      sorter.js                       |       0 |        0 |       0 |       0 | 2-196             
-     liona-feeds/demo                 |       0 |        0 |       0 |       0 |                   
-      server.js                       |       0 |        0 |       0 |       0 | 1-27              
-      server.mjs                      |       0 |        0 |       0 |       0 | 5-16              
-     liona-feeds/src                  |       0 |        0 |       0 |       0 |                   
-      index.ts                        |       0 |        0 |       0 |       0 |                   
-     liona-feeds/src/feeds            |   10.82 |     9.52 |    9.09 |   11.03 |                   
-      cleaner.ts                      |   34.37 |        0 |   23.07 |   36.66 | 35-50,64-82       
-      feeder.ts                       |       0 |        0 |       0 |       0 | 14-183            
-      metadata.ts                     |       0 |        0 |       0 |       0 |                   
-      ranking.ts                      |     100 |      100 |     100 |     100 |                   
-      statistic.ts                    |       0 |        0 |       0 |       0 | 14-77             
-     liona-feeds/src/network          |       0 |        0 |       0 |       0 |                   
-      cors.ts                         |       0 |        0 |       0 |       0 | 2-8               
-     liona-feeds/src/shared           |    90.9 |      100 |    90.9 |    90.9 |                   
-      log-service.ts                  |     100 |      100 |     100 |     100 |                   
-      test-utils.ts                   |       0 |      100 |       0 |       0 | 1-2               
-    ----------------------------------|---------|----------|---------|---------|-------------------
+      17 passing (16ms)
+    ----------------------------------|---------|----------|---------|---------|----------------------
+    File                              | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s    
+    ----------------------------------|---------|----------|---------|---------|----------------------
+    All files                         |    4.69 |     3.11 |   11.73 |    9.17 |                      
+     liona-feeds                      |       0 |        0 |       0 |       0 |                      
+      cleaner.ts                      |       0 |        0 |       0 |       0 | 5-83                 
+      cors.ts                         |       0 |        0 |       0 |       0 | 2-8                  
+      feeder.ts                       |       0 |        0 |       0 |       0 | 12-183               
+      log-service.ts                  |       0 |        0 |       0 |       0 | 1-56                 
+      ranking.ts                      |       0 |        0 |       0 |       0 | 5-16                 
+      statistic.ts                    |       0 |        0 |       0 |       0 | 8-80                 
+     liona-feeds/coverage/lcov-report |       0 |        0 |       0 |       0 |                      
+      block-navigation.js             |       0 |        0 |       0 |       0 | 2-87                 
+      prettify.js                     |       0 |        0 |       0 |       0 | 2                    
+      sorter.js                       |       0 |        0 |       0 |       0 | 2-196                
+     liona-feeds/demo                 |       0 |        0 |       0 |       0 |                      
+      server.js                       |       0 |        0 |       0 |       0 | 1-27                 
+      server.mjs                      |       0 |        0 |       0 |       0 | 5-16                 
+     liona-feeds/src                  |       0 |        0 |       0 |       0 |                      
+      index.ts                        |       0 |        0 |       0 |       0 |                      
+     liona-feeds/src/feeds            |   16.56 |    16.66 |   22.72 |   16.88 |                      
+      cleaner.ts                      |    62.5 |     37.5 |   69.23 |   66.66 | 36,47-49,63-67,73-74 
+      feeder.ts                       |       0 |        0 |       0 |       0 | 14-183               
+      metadata.ts                     |       0 |        0 |       0 |       0 |                      
+      ranking.ts                      |     100 |      100 |     100 |     100 |                      
+      statistic.ts                    |       0 |        0 |       0 |       0 | 14-77                
+     liona-feeds/src/network          |       0 |        0 |       0 |       0 |                      
+      cors.ts                         |       0 |        0 |       0 |       0 | 2-8                  
+     liona-feeds/src/shared           |   96.15 |      100 |   91.66 |   95.83 |                      
+      log-service.ts                  |     100 |      100 |     100 |     100 |                      
+      test-utils.ts                   |   83.33 |      100 |      50 |      75 | 6                    
+    ----------------------------------|---------|----------|---------|---------|----------------------
 
