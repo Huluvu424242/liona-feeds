@@ -2,11 +2,10 @@ import {EMPTY, filter, from, Observable, Subscription, switchMap, timer} from "r
 import {logService} from "../shared/log-service";
 import {FeedMetadata} from "./metadata";
 
-
-const JOB_PERIOD: number = 60000 * 30; // alle 30 Minuten
-const TIMEOUT_DELTA: number = 60000 * 60; // alle 60 Minuten
-
 export class Cleaner {
+
+    public static CLEANER_JOB_PERIOD: number = 60000 * 30; // alle 30 Minuten
+    public static CLEANER_TIMEOUT_DELTA: number = 60000 * 60; // alle 60 Minuten
 
     protected feedMap: Map<string, FeedMetadata>;
     protected jobPeriod: number;
@@ -24,7 +23,7 @@ export class Cleaner {
      * @param jobPeriod Zeitintervall nach dem ein neuer Reinigungsdurchgang anläuft
      * @param timeoutDelta Zeitgrenze nach deren Überschreiten ein Feed ohne Anfragen im Zeitbereich entfernt wird.
      */
-    public constructor(feedMap: Map<string, FeedMetadata>, jobPeriod: number = JOB_PERIOD, timeoutDelta: number = TIMEOUT_DELTA) {
+    public constructor(feedMap: Map<string, FeedMetadata>, jobPeriod: number = Cleaner.CLEANER_JOB_PERIOD, timeoutDelta: number = Cleaner.CLEANER_TIMEOUT_DELTA) {
         this.feedMap = feedMap;
         this.jobPeriod = jobPeriod;
         this.timeoutDelta = timeoutDelta;
