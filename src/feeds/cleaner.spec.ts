@@ -3,8 +3,8 @@ import {TestScheduler} from "rxjs/testing";
 import {expect} from "chai";
 import {Cleaner} from "./cleaner";
 import {FeedMetadata} from "./metadata";
-import {EMPTY, Observable, of, Subscription, take} from "rxjs";
-import {getPropertyValue, setPropertyValue} from "../shared/test-utils";
+import {of, Subscription, take} from "rxjs";
+import {getPropertyValue} from "../shared/test-utils";
 import {spy} from "sinon";
 import {logService} from "../shared/log-service";
 
@@ -29,10 +29,10 @@ describe('Cleaner', () => {
 
         it('Cleaner Instanzen werdne korrekt initialisiert', () => {
             const cleaner: Cleaner = new Cleaner(feedMap);
-            expect(getPropertyValue(cleaner,"feedMap")).to.be.deep.eq(feedMap);
-            expect(getPropertyValue(cleaner,"jobPeriod")).to.be.eq(Cleaner.CLEANER_JOB_PERIOD);
-            expect(getPropertyValue(cleaner,"timeoutDelta")).to.be.eq(Cleaner.CLEANER_TIMEOUT_DELTA);
-            expect(getPropertyValue(cleaner,"cleanUpJobSubscription")).to.be.ok;
+            expect(getPropertyValue(cleaner, "feedMap")).to.be.deep.eq(feedMap);
+            expect(getPropertyValue(cleaner, "jobPeriod")).to.be.eq(Cleaner.CLEANER_JOB_PERIOD);
+            expect(getPropertyValue(cleaner, "timeoutDelta")).to.be.eq(Cleaner.CLEANER_TIMEOUT_DELTA);
+            expect(getPropertyValue(cleaner, "cleanUpJobSubscription")).to.be.ok;
         })
 
         it('Subscribe of cleaner job works correct.', () => {
@@ -41,16 +41,16 @@ describe('Cleaner', () => {
             const infoMessageSpy = spy(logService, 'infoMessage');
 
             const cleaner: Cleaner = new Cleaner(feedMap);
-            cleaner.feedKeysToRemove$= ()=> of("feed1","feed2");
+            cleaner.feedKeysToRemove$ = () => of("feed1", "feed2");
 
-            const cleanUpJobSubscriptionBeforeSubscribe=getPropertyValue<Subscription>(cleaner,"cleanUpJobSubscription");
+            const cleanUpJobSubscriptionBeforeSubscribe = getPropertyValue<Subscription>(cleaner, "cleanUpJobSubscription");
             expect(cleanUpJobSubscriptionBeforeSubscribe).to.be.ok;
 
             cleaner.subscribeCleanUpJob();
 
-            const cleanUpJobSubscriptionAfterSubscribe=getPropertyValue<Subscription>(cleaner,"cleanUpJobSubscription");
+            const cleanUpJobSubscriptionAfterSubscribe = getPropertyValue<Subscription>(cleaner, "cleanUpJobSubscription");
             expect(cleanUpJobSubscriptionAfterSubscribe).to.be.ok;
-            expect(cleanUpJobSubscriptionAfterSubscribe===cleanUpJobSubscriptionBeforeSubscribe).not.to.be.true;
+            expect(cleanUpJobSubscriptionAfterSubscribe === cleanUpJobSubscriptionBeforeSubscribe).not.to.be.true;
 
             expect(errorMessageSpy.called).to.be.false;
             expect(debugMessageSpy.calledWithExactly("Feed feed1 aus Feedliste entfernt.")).to.be.true;
@@ -61,6 +61,19 @@ describe('Cleaner', () => {
             debugMessageSpy.restore();
             infoMessageSpy.restore();
         })
+
+        it('Unsubscribe of cleaner job works correct.', () => {
+            const cleaner: Cleaner = new Cleaner(feedMap);
+            const cleanUpJobSubscription: Subscription = getPropertyValue(cleaner, "cleanUpJobSubscription");
+            const subscriptionSpy = spy(cleanUpJobSubscription, "unsubscribe");
+
+            expect(subscriptionSpy.called).not.to.be.true;
+
+            cleaner.unsubscribeCleanUpJob();
+
+            expect(subscriptionSpy.called).to.be.true;
+
+        });
 
     });
 
