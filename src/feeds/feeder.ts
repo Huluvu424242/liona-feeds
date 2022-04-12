@@ -3,9 +3,10 @@ import {EMPTY, from, Observable, Subscription, timer} from "rxjs";
 import * as objectHash from "object-hash";
 import axios, {AxiosResponse} from "axios";
 import {catchError, switchMap, tap} from "rxjs/operators";
-import {Cleaner, FeedMetadata} from "./cleaner";
-import {Statistic, StatisticData} from "./statistic";
+import {Cleaner} from "./cleaner";
+import {Statistic} from "./statistic";
 import {logService} from "../shared/log-service";
+import {FeedMetadata, StatisticData} from "./metadata";
 
 
 class Feeder {
@@ -14,6 +15,11 @@ class Feeder {
 
     protected cleaner: Cleaner = new Cleaner(this.feeds); // selbststartend
     protected statistic: Statistic = new Statistic(this.feeds);
+
+    constructor() {
+        this.cleaner.subscribeCleanUpJob();
+    }
+
 
     protected logMetadata(titel: string, feedData: FeedMetadata) {
         logService.debugMessage(titel);
@@ -120,7 +126,7 @@ class Feeder {
         return feed$.subscribe(
             (feedResponse: AxiosResponse) => {
                 if (feedResponse.status != 200) {
-                    logService.errorMessage("",new Error(`status code ${feedResponse.status}`));
+                    logService.errorMessage("", new Error(`status code ${feedResponse.status}`));
                     return;
                 }
                 let parser = new FeedMe(true);
@@ -129,7 +135,7 @@ class Feeder {
                 this.statistic.feedResponseWasOK(key);
                 this.speichereResponsedaten(key, feed);
             }, (error) => {
-                logService.errorMessage("",new Error(`Response failed with: ${error}`));
+                logService.errorMessage("", new Error(`Response failed with: ${error}`));
             }, () => {
                 logService.errorMessage("Feed complete for " + url + "(" + key + ")");
             }

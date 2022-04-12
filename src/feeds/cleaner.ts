@@ -1,4 +1,4 @@
-import {filter, from, Observable, Subscription, switchMap, timer} from "rxjs";
+import {EMPTY, filter, from, Observable, Subscription, switchMap, timer} from "rxjs";
 import {logService} from "../shared/log-service";
 import {FeedMetadata} from "./metadata";
 
@@ -28,12 +28,20 @@ export class Cleaner {
         this.feedMap = feedMap;
         this.jobPeriod = jobPeriod;
         this.timeoutDelta = timeoutDelta;
+        this.cleanUpJobSubscription = EMPTY.subscribe();
+    }
+
+    public subscribeCleanUpJob(): void {
         this.cleanUpJobSubscription = this.feedKeysToRemove$().subscribe({
                 next: (key: string) => this.removeAndCleanUpKey(key),
                 error: (error: any) => logService.errorMessage(error),
                 complete: () => logService.infoMessage("Subscription of cleanUpJob finished")
             }
         );
+    }
+
+    public unsubscribeCleanUpJob(): void {
+        this.cleanUpJobSubscription.unsubscribe();
     }
 
     feedKeysToRemove$(): Observable<string> {
@@ -55,6 +63,7 @@ export class Cleaner {
     tooFewRequested(key: string): boolean {
         const feedMetadata: FeedMetadata = this.feedMap.get(key) as FeedMetadata
         if (!feedMetadata) return true; // -> entfernen
+        if (!feedMetadata.lastRequested) feedMetadata.lastRequested = new Date(Date.now());
         const current: number = Date.now();
         return (current - feedMetadata.lastRequested.getTime()) > this.timeoutDelta;
     }
@@ -62,7 +71,7 @@ export class Cleaner {
     unsubscribeFeedInMetadata(key: string) {
         const feedMetadata: FeedMetadata = this.feedMap.get(key) as FeedMetadata;
         if (feedMetadata) {
-            feedMetadata.subscription.unsubscribe();
+            feedMetadata.subscription?.unsubscribe();
             logService.debugMessage("Subscription für feed " + key + " beendet.");
         }
     }

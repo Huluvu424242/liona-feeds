@@ -7,10 +7,18 @@ import {take} from "rxjs";
 
 describe('Cleaner', () => {
 
+    const metaData1: FeedMetadata = {
+        url: "http://feed1.de",
+        // lastRequested: new Date(Date.now() - 10000),
+    };
+    const metaData2: FeedMetadata = {
+        url: "http://feed1.de",
+        // lastRequested: new Date(Date.now() - 5000),
+    };
+
     describe('Marble Tests', () => {
 
         let testScheduler: TestScheduler;
-
 
         beforeEach('Erstelle TestSheduler', () => {
             testScheduler = new TestScheduler((actual, expected) => {
@@ -18,14 +26,17 @@ describe('Cleaner', () => {
             });
         });
 
-        it('Generiere 5 Feeds', () => {
+        it('Generiere längere Folge von Keys als Zuordnungen in der Map vorhanden sind, ohne vorher zu completen ', () => {
             const feedMap: Map<string, FeedMetadata> = new Map();
-            const cleaner: Cleaner = new Cleaner(feedMap,1000,10000);
+            feedMap.set("feed1", metaData1);
+            feedMap.set("feed2", metaData2);
+
 
             testScheduler.run(({expectObservable}) => {
-                const expectedMarble = '1s a 999ms b 999ms c 999ms d 999ms (e|)';
-                const exprectedValues = {a: 0, b: 1, c: 2, d: 3, e: 4};
-                const source$ = cleaner.keylistOfFeeds$().pipe(take(2));
+                const cleaner: Cleaner = new Cleaner(feedMap, 1000, 10000);
+                const expectedMarble = '(ab) 996ms (ab) 996ms (ab|)';
+                const exprectedValues = {a: "feed1", b: "feed2"};
+                const source$ = cleaner.keylistOfFeeds$().pipe(take(6));
                 expectObservable(source$).toBe(expectedMarble, exprectedValues);
             });
         });
