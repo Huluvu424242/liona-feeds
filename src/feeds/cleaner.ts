@@ -2,7 +2,6 @@ import {EMPTY, filter, from, Observable, Subscription, switchMap, timer} from "r
 import {logService} from "../shared/log-service";
 import {FeedMetadata} from "./metadata";
 import {TimeUtils} from "../shared/time-utils";
-import {TIMEOUT} from "dns";
 
 export class Cleaner {
 
@@ -69,7 +68,7 @@ export class Cleaner {
         const current: number = this.TIME_UTILS.now();
         if (!feedMetadata.lastRequested) feedMetadata.lastRequested = new Date(current);
         logService.debugMessage("(current - feedMetadata.lastRequested.getTime()) > this.timeoutDelta");
-        logService.debugMessage("      current: " + current + "\nlastRequested: " + feedMetadata.lastRequested.getTime() + "\n timeoutDelta: " + this.timeoutDelta + " delta: "+(current - feedMetadata.lastRequested.getTime()));
+        logService.debugMessage("      current: " + current + "\nlastRequested: " + feedMetadata.lastRequested.getTime() + "\n timeoutDelta: " + this.timeoutDelta + " delta: " + (current - feedMetadata.lastRequested.getTime()));
         return (current - feedMetadata.lastRequested.getTime()) > this.timeoutDelta;
     }
 
