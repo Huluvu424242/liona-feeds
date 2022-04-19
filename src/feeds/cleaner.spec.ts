@@ -133,19 +133,20 @@ describe('Cleaner', () => {
             });
         });
 
-        // it('Generiere längere Key Folgen als Zuordnungen in der Feed Map vorhanden sind, ohne vorher den Stream zu schließen ', () => {
-        //     const realNow = Date.now();
-        //     const realNowDate = new Date(realNow);
-        //     metaData1.lastRequested = new Date(realNow -10000);
-        //     metaData2.lastRequested = new Date(realNow -5000);
-        //     testScheduler.run(({expectObservable}) => {
-        //         const cleaner: Cleaner = new Cleaner(feedMapFake, 7000, 6000);
-        //         const expectedMarble = 'a 6999ms (ab) 6999ms (ab|)';
-        //         const exprectedValues = {a: "feed1", b: "feed2"};
-        //         const source$ = cleaner.feedKeysToRemove$().pipe(take(6));
-        //         expectObservable(source$).toBe(expectedMarble, exprectedValues);
-        //     });
-        // });
+        // Problem beim marble Test: https://gist.github.com/Huluvu424242/e665800e0b607c828926f6aa67f33178
+        it('Generiere Folgen von Feeds die den timeout überschritten haben. ', () => {
+            const realNow = Date.now();
+            const realNowDate = new Date(realNow);
+            metaData1.lastRequested = new Date(realNow -10000);
+            metaData2.lastRequested = new Date(realNow -5000);
+            testScheduler.run(({expectObservable}) => {
+                const cleaner: Cleaner = new Cleaner(feedMapFake, 7000, 6000);
+                const expectedMarble = 'a 6999ms (ab) 6999ms (ab|)';
+                const exprectedValues = {a: "feed1", b: "feed2"};
+                const source$ = cleaner.feedKeysToRemove$().pipe(take(6));
+                expectObservable(source$).toBe(expectedMarble, exprectedValues);
+            });
+        });
 
 
 
