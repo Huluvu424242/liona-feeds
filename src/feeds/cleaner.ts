@@ -1,11 +1,15 @@
 import {EMPTY, filter, from, Observable, Subscription, switchMap, timer} from "rxjs";
 import {logService} from "../shared/log-service";
 import {FeedMetadata} from "./metadata";
+import {TimeUtils} from "../shared/time-utils";
+import {TIMEOUT} from "dns";
 
 export class Cleaner {
 
     public static CLEANER_JOB_PERIOD: number = 60000 * 30; // alle 30 Minuten
     public static CLEANER_TIMEOUT_DELTA: number = 60000 * 60; // alle 60 Minuten
+
+    TIME_UTILS = new TimeUtils();
 
     protected feedMap: Map<string, FeedMetadata>;
     protected jobPeriod: number;
@@ -62,7 +66,7 @@ export class Cleaner {
     tooFewRequested(key: string): boolean {
         const feedMetadata: FeedMetadata = this.feedMap.get(key) as FeedMetadata
         if (!feedMetadata) return true; // -> entfernen
-        const current: number = Date.now();
+        const current: number = this.TIME_UTILS.now();
         if (!feedMetadata.lastRequested) feedMetadata.lastRequested = new Date(current);
         logService.debugMessage("(current - feedMetadata.lastRequested.getTime()) > this.timeoutDelta");
         logService.debugMessage("      current: " + current + "\nlastRequested: " + feedMetadata.lastRequested.getTime() + "\n timeoutDelta: " + this.timeoutDelta + " delta: "+(current - feedMetadata.lastRequested.getTime()));

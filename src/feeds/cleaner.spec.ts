@@ -79,7 +79,7 @@ describe('Cleaner', () => {
             metaData2.lastRequested = new Date(Date.now() - 5000);
             feedMapFake.set("feed1", metaData1);
             feedMapFake.set("feed2", metaData2);
-            const cleaner: Cleaner = new Cleaner(feedMapFake,0,6000);
+            const cleaner: Cleaner = new Cleaner(feedMapFake, 0, 6000);
 
             expect(cleaner.tooFewRequested("feed1")).to.be.true;
             expect(cleaner.tooFewRequested("feed2")).to.be.false;
@@ -90,7 +90,7 @@ describe('Cleaner', () => {
             metaData2.lastRequested = new Date(Date.now() - 5000);
             feedMapFake.set("feed1", metaData1);
             feedMapFake.set("feed2", metaData2);
-            const cleaner: Cleaner = new Cleaner(feedMapFake,0,6000);
+            const cleaner: Cleaner = new Cleaner(feedMapFake, 0, 6000);
 
             expect(cleaner.tooFewRequested("feed1")).to.be.false;
             expect(cleaner.tooFewRequested("feed2")).to.be.false;
@@ -101,7 +101,7 @@ describe('Cleaner', () => {
             metaData2.lastRequested = new Date(Date.now() - 10000);
             feedMapFake.set("feed1", metaData1);
             feedMapFake.set("feed2", metaData2);
-            const cleaner: Cleaner = new Cleaner(feedMapFake,0,6000);
+            const cleaner: Cleaner = new Cleaner(feedMapFake, 0, 6000);
 
             expect(cleaner.tooFewRequested("feed1")).to.be.true;
             expect(cleaner.tooFewRequested("feed2")).to.be.true;
@@ -135,19 +135,29 @@ describe('Cleaner', () => {
 
         // Problem beim marble Test: https://gist.github.com/Huluvu424242/e665800e0b607c828926f6aa67f33178
         it('Generiere Folgen von Feeds die den timeout überschritten haben. ', () => {
-            const realNow = Date.now();
-            const realNowDate = new Date(realNow);
-            metaData1.lastRequested = new Date(realNow -10000);
-            metaData2.lastRequested = new Date(realNow -5000);
+
+            const nowFake = () => {
+                const offset = testScheduler.now();
+                logService.debugMessage("# fake called " + offset);
+                return offset;
+            }
+
             testScheduler.run(({expectObservable}) => {
+
                 const cleaner: Cleaner = new Cleaner(feedMapFake, 7000, 6000);
-                const expectedMarble = 'a 6999ms (ab) 6999ms (ab|)';
+                cleaner.TIME_UTILS.now = nowFake;
+
+                const realNow = cleaner.TIME_UTILS.now();
+                const realNowDate = new Date(realNow);
+                metaData1.lastRequested = new Date(realNow - 10000);
+                metaData2.lastRequested = new Date(realNow - 5000);
+
+                const expectedMarble = 'a 6999ms (ab) 6996ms (ab|)';
                 const exprectedValues = {a: "feed1", b: "feed2"};
-                const source$ = cleaner.feedKeysToRemove$().pipe(take(6));
+                const source$ = cleaner.feedKeysToRemove$().pipe(take(5));
                 expectObservable(source$).toBe(expectedMarble, exprectedValues);
             });
         });
-
 
 
     });
