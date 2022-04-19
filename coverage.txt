@@ -9,30 +9,30 @@
           √ Subscribe of cleaner job works correct.
           √ Unsubscribe of cleaner job works correct.
     (current - feedMetadata.lastRequested.getTime()) > this.timeoutDelta
-          current: 1650400286256
-    lastRequested: 1650400276255
+          current: 1650401093423
+    lastRequested: 1650401083422
      timeoutDelta: 6000 delta: 10001
     (current - feedMetadata.lastRequested.getTime()) > this.timeoutDelta
-          current: 1650400286256
-    lastRequested: 1650400281255
+          current: 1650401093423
+    lastRequested: 1650401088422
      timeoutDelta: 6000 delta: 5001
           √ tooFewRequested works correct with one value < limit and one value > limit
     (current - feedMetadata.lastRequested.getTime()) > this.timeoutDelta
-          current: 1650400286256
-    lastRequested: 1650400281256
+          current: 1650401093423
+    lastRequested: 1650401088423
      timeoutDelta: 6000 delta: 5000
     (current - feedMetadata.lastRequested.getTime()) > this.timeoutDelta
-          current: 1650400286256
-    lastRequested: 1650400281256
+          current: 1650401093423
+    lastRequested: 1650401088423
      timeoutDelta: 6000 delta: 5000
           √ tooFewRequested works correct with both values < limit 
     (current - feedMetadata.lastRequested.getTime()) > this.timeoutDelta
-          current: 1650400286257
-    lastRequested: 1650400276257
+          current: 1650401093424
+    lastRequested: 1650401083424
      timeoutDelta: 6000 delta: 10000
     (current - feedMetadata.lastRequested.getTime()) > this.timeoutDelta
-          current: 1650400286257
-    lastRequested: 1650400276257
+          current: 1650401093424
+    lastRequested: 1650401083424
      timeoutDelta: 6000 delta: 10000
           √ tooFewRequested works correct with both values > limit 
         Marble Tests
@@ -83,40 +83,39 @@
           √ debugMessage logt nicht bei deaktivierten Logging
           √ infoMessage logt nicht bei deaktivierten Logging
           √ logMessage logt nicht bei deaktivierten Logging
-      Cleaner
+      Test Utils:
+        √ getPropertyValue gibt den korrekten Wert zurück
+        √ setPropertyValue setzt den korrekten Wert
+      Time Utils:
         √ now liefert in etwa die aktuelle Zeit von Date.now()
-      22 passing (20ms)
-    ----------------------------------|---------|----------|---------|---------|-------------------
-    File                              | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
-    ----------------------------------|---------|----------|---------|---------|-------------------
-    All files                         |    5.85 |     3.56 |   13.88 |   11.48 |                   
-     liona-feeds                      |       0 |        0 |       0 |       0 |                   
-      cleaner.ts                      |       0 |        0 |       0 |       0 | 5-83              
-      cors.ts                         |       0 |        0 |       0 |       0 | 2-8               
-      feeder.ts                       |       0 |        0 |       0 |       0 | 12-183            
-      log-service.ts                  |       0 |        0 |       0 |       0 | 1-56              
-      ranking.ts                      |       0 |        0 |       0 |       0 | 5-16              
-      statistic.ts                    |       0 |        0 |       0 |       0 | 8-80              
-     liona-feeds/coverage/lcov-report |       0 |        0 |       0 |       0 |                   
-      block-navigation.js             |       0 |        0 |       0 |       0 | 2-87              
-      prettify.js                     |       0 |        0 |       0 |       0 | 2                 
-      sorter.js                       |       0 |        0 |       0 |       0 | 2-196             
-     liona-feeds/demo                 |       0 |        0 |       0 |       0 |                   
-      server.js                       |       0 |        0 |       0 |       0 | 1-27              
-      server.mjs                      |       0 |        0 |       0 |       0 | 5-16              
-     liona-feeds/src                  |       0 |        0 |       0 |       0 |                   
-      index.ts                        |       0 |        0 |       0 |       0 |                   
-     liona-feeds/src/feeds            |   22.98 |    21.42 |   29.54 |   23.41 |                   
-      cleaner.ts                      |   86.11 |     62.5 |    92.3 |   91.17 | 39,78-79          
-      feeder.ts                       |       0 |        0 |       0 |       0 | 14-183            
-      metadata.ts                     |       0 |        0 |       0 |       0 |                   
-      ranking.ts                      |     100 |      100 |     100 |     100 |                   
-      statistic.ts                    |       0 |        0 |       0 |       0 | 14-77             
-     liona-feeds/src/network          |       0 |        0 |       0 |       0 |                   
-      cors.ts                         |       0 |        0 |       0 |       0 | 2-8               
-     liona-feeds/src/shared           |   96.42 |      100 |    92.3 |   96.15 |                   
-      log-service.ts                  |     100 |      100 |     100 |     100 |                   
-      test-utils.ts                   |   83.33 |      100 |      50 |      75 | 6                 
-      time-utils.ts                   |     100 |      100 |     100 |     100 |                   
-    ----------------------------------|---------|----------|---------|---------|-------------------
+      24 passing (20ms)
+    -------------------------|---------|----------|---------|---------|-------------------
+    File                     | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+    -------------------------|---------|----------|---------|---------|-------------------
+    All files                |   14.87 |    13.33 |   20.63 |      15 |                   
+     liona-feeds             |       0 |        0 |       0 |       0 |                   
+      cleaner.ts             |       0 |        0 |       0 |       0 | 5-83              
+      cors.ts                |       0 |        0 |       0 |       0 | 2-8               
+      feeder.ts              |       0 |        0 |       0 |       0 | 12-183            
+      log-service.ts         |       0 |        0 |       0 |       0 | 1-56              
+      ranking.ts             |       0 |        0 |       0 |       0 | 5-16              
+      statistic.ts           |       0 |        0 |       0 |       0 | 8-80              
+     liona-feeds/demo        |       0 |        0 |       0 |       0 |                   
+      server.js              |       0 |        0 |       0 |       0 | 1-27              
+      server.mjs             |       0 |        0 |       0 |       0 | 5-16              
+     liona-feeds/src         |       0 |        0 |       0 |       0 |                   
+      index.ts               |       0 |        0 |       0 |       0 |                   
+     liona-feeds/src/feeds   |   22.98 |    21.42 |   29.54 |   23.41 |                   
+      cleaner.ts             |   86.11 |     62.5 |    92.3 |   91.17 | 39,78-79          
+      feeder.ts              |       0 |        0 |       0 |       0 | 14-183            
+      metadata.ts            |       0 |        0 |       0 |       0 |                   
+      ranking.ts             |     100 |      100 |     100 |     100 |                   
+      statistic.ts           |       0 |        0 |       0 |       0 | 14-77             
+     liona-feeds/src/network |       0 |        0 |       0 |       0 |                   
+      cors.ts                |       0 |        0 |       0 |       0 | 2-8               
+     liona-feeds/src/shared  |     100 |      100 |     100 |     100 |                   
+      log-service.ts         |     100 |      100 |     100 |     100 |                   
+      test-utils.ts          |     100 |      100 |     100 |     100 |                   
+      time-utils.ts          |     100 |      100 |     100 |     100 |                   
+    -------------------------|---------|----------|---------|---------|-------------------
 
