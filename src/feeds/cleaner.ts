@@ -62,8 +62,10 @@ export class Cleaner {
     tooFewRequested(key: string): boolean {
         const feedMetadata: FeedMetadata = this.feedMap.get(key) as FeedMetadata
         if (!feedMetadata) return true; // -> entfernen
-        if (!feedMetadata.lastRequested) feedMetadata.lastRequested = new Date(Date.now());
         const current: number = Date.now();
+        if (!feedMetadata.lastRequested) feedMetadata.lastRequested = new Date(current);
+        logService.debugMessage("(current - feedMetadata.lastRequested.getTime()) > this.timeoutDelta");
+        logService.debugMessage("      current: " + current + "\nlastRequested: " + feedMetadata.lastRequested.getTime() + "\n timeoutDelta: " + this.timeoutDelta + " delta: "+(current - feedMetadata.lastRequested.getTime()));
         return (current - feedMetadata.lastRequested.getTime()) > this.timeoutDelta;
     }
 
