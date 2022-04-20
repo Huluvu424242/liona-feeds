@@ -2,18 +2,22 @@
   "name": "@huluvu424242/liona-feeds",
   "version": "2.3.3",
   "description": "Modul to realize an REST endpoint to receive news feed data",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "types": "index.d.ts",
+  "source": "src/index.ts",
+  "main": "dist/index.js",
+  "module": "dist/module.js",
+  "types": "dist/types.d.ts",
+  "context": "node",
   "unpkg": "dist/liona-feeds/liona-feeds.js",
   "files": [
     "dist/"
   ],
   "scripts": {
-    "build": "npx tsc -p tsconfig.json && npx tsc -p tsconfig-cjs.json",
-    "start": "node demo/server.js",
-    "prepare": "npm run build",
-    "deliver": "npm publish --access=public",
+    "lint": "eslint",
+    "check": "tsc --noEmit",
+    "build": "parcel build src/index.ts",
+    "test": "mocha -r ts-node/register src/**/*.spec.ts",
+    "test:coverage": "nyc npm run test |tap-nyc | tee coverage.txt && npm run test:reports",
+    "test:reports": "nyc report --reporter=lcov --reporter=text",
     "pruefeVersionen": "npm outdated",
     "check-credits": "npx license-checker --failOn 'AGPL' --production >credits.txt"
   },
@@ -22,7 +26,6 @@
     "url": "git+https://github.com/Huluvu424242/liona-feeds.git"
   },
   "keywords": [
-    "liona-news",
     "news-feed",
     "rest-endpoint"
   ],
@@ -33,19 +36,38 @@
   },
   "homepage": "https://github.com/Huluvu424242/liona-feeds#readme",
   "engines": {
-    "node": "16.13.1"
+    "node": ">=16"
   },
   "dependencies": {
-    "rxjs": "7.4.0",
-    "rxjs-operators": "1.1.3",
+    "axios": "0.26.1",
     "feedme": "2.0.2",
-    "axios": "0.24.0",
-    "object-hash": "2.2.0"
+    "object-hash": "3.0.0",
+    "rxjs": "7.5.5",
+    "rxjs-operators": "1.1.3"
   },
   "devDependencies": {
-    "@types/feedme": "1.0.0",
+    "typescript": "4.6.3",
+    "@types/node": "17.0.23",
     "@types/object-hash": "2.2.1",
-    "express": "4.17.2",
-    "typescript": "4.5.4"
+    "@types/mocha": "9.1.0",
+    "@types/chai": "4.3.0",
+    "@types/sinon": "10.0.11",
+    "@types/sinon-chai": "3.2.8",
+    "parcel": "2.4.1",
+    "@parcel/packager-ts": "^2.4.1",
+    "@parcel/transformer-typescript-tsc": "2.4.1",
+    "@parcel/transformer-typescript-types": "2.4.1",
+    "@parcel/validator-typescript": "2.4.1",
+    "express": "4.17.3",
+    "mocha": "9.2.2",
+    "chai": "4.3.6",
+    "ts-node": "10.7.0",
+    "sinon": "13.0.1",
+    "sinon-chai": "3.7.0",
+    "nyc": "15.1.0",
+    "@istanbuljs/nyc-config-typescript": "1.0.2",
+    "tap-nyc": "1.0.3",
+    "marble-test": "3.1.1",
+    "@pact-foundation/pact": "10.0.0-beta.59"
   }
 }

@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.13.1, 15.0.1]
+        node-version: [16.13.1, 16.13.2]
 
     steps:
     - uses: actions/checkout@v2
@@ -17,8 +17,8 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm install
-    - run: npm run build --if-present
-    - run: npm test --if-present
+    - run: npm prune && npm i
+    - run: npm run build
+    - run: npm run test:coverage
       env:
         CI: true
