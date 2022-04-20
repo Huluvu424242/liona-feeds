@@ -1,6 +1,7 @@
 name: Upload to Github
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - 'release/**'
