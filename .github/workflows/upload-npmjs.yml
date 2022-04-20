@@ -22,7 +22,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: quality gate
         run: |
-        npm prune && npm i
+        npm prune
+        npm i
         npm run test:coverage
       - name: Deploy to npm.com
         if: "contains(github.event.head_commit.message, 'Release')"
