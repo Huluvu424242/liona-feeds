@@ -9,31 +9,31 @@
           √ Subscribe of cleaner job works correct.
           √ Unsubscribe of cleaner job works correct.
     (current - feedMetadata.lastRequested.getTime()) > this.timeoutDelta
-          current: 1650403902177
-    lastRequested: 1650403892177
+          current: 1650479813572
+    lastRequested: 1650479803572
      timeoutDelta: 6000 delta: 10000
     (current - feedMetadata.lastRequested.getTime()) > this.timeoutDelta
-          current: 1650403902177
-    lastRequested: 1650403897177
+          current: 1650479813572
+    lastRequested: 1650479808572
      timeoutDelta: 6000 delta: 5000
           √ tooFewRequested works correct with one value < limit and one value > limit
     (current - feedMetadata.lastRequested.getTime()) > this.timeoutDelta
-          current: 1650403902178
-    lastRequested: 1650403897178
+          current: 1650479813573
+    lastRequested: 1650479808573
      timeoutDelta: 6000 delta: 5000
     (current - feedMetadata.lastRequested.getTime()) > this.timeoutDelta
-          current: 1650403902178
-    lastRequested: 1650403897178
+          current: 1650479813573
+    lastRequested: 1650479808573
      timeoutDelta: 6000 delta: 5000
           √ tooFewRequested works correct with both values < limit 
     (current - feedMetadata.lastRequested.getTime()) > this.timeoutDelta
-          current: 1650403902178
-    lastRequested: 1650403892178
-     timeoutDelta: 6000 delta: 10000
+          current: 1650479813574
+    lastRequested: 1650479803573
+     timeoutDelta: 6000 delta: 10001
     (current - feedMetadata.lastRequested.getTime()) > this.timeoutDelta
-          current: 1650403902178
-    lastRequested: 1650403892178
-     timeoutDelta: 6000 delta: 10000
+          current: 1650479813574
+    lastRequested: 1650479803573
+     timeoutDelta: 6000 delta: 10001
           √ tooFewRequested works correct with both values > limit 
         Marble Tests
           √ Generiere längere Key Folgen als Zuordnungen in der Feed Map vorhanden sind, ohne vorher den Stream zu schließen 
@@ -91,26 +91,28 @@
         √ setPropertyValue setzt den korrekten Wert
       Time Utils:
         √ now liefert in etwa die aktuelle Zeit von Date.now()
-      26 passing (21ms)
+        √ newDate liefert in etwa die aktuelle Zeit von new Date()
+      27 passing (21ms)
     -------------------------|---------|----------|---------|---------|-------------------
     File                     | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
     -------------------------|---------|----------|---------|---------|-------------------
-    All files                |   16.43 |       15 |   21.42 |   16.42 |                   
+    All files                |   16.07 |    14.75 |   21.53 |   16.12 |                   
      liona-feeds             |       0 |        0 |       0 |       0 |                   
-      cleaner.ts             |       0 |        0 |       0 |       0 | 5-83              
+      cleaner.ts             |       0 |        0 |       0 |       0 | 6-88              
       cors.ts                |       0 |        0 |       0 |       0 | 2-8               
-      feeder.ts              |       0 |        0 |       0 |       0 | 12-183            
+      feeder.ts              |       0 |        0 |       0 |       0 | 13-191            
       log-service.ts         |       0 |        0 |       0 |       0 | 1-56              
       ranking.ts             |       0 |        0 |       0 |       0 | 5-16              
       statistic.ts           |       0 |        0 |       0 |       0 | 8-80              
+      time-utils.ts          |       0 |      100 |       0 |       0 | 1-10              
      liona-feeds/demo        |       0 |        0 |       0 |       0 |                   
       server.js              |       0 |        0 |       0 |       0 | 1-27              
       server.mjs             |       0 |        0 |       0 |       0 | 5-16              
      liona-feeds/src         |       0 |        0 |       0 |       0 |                   
       index.ts               |       0 |        0 |       0 |       0 |                   
-     liona-feeds/src/feeds   |   22.98 |    21.42 |   29.54 |   23.41 |                   
+     liona-feeds/src/feeds   |   22.69 |    21.42 |   29.54 |   23.12 |                   
       cleaner.ts             |   86.11 |     62.5 |    92.3 |   91.17 | 39,78-79          
-      feeder.ts              |       0 |        0 |       0 |       0 | 14-183            
+      feeder.ts              |       0 |        0 |       0 |       0 | 15-191            
       metadata.ts            |       0 |        0 |       0 |       0 |                   
       ranking.ts             |     100 |      100 |     100 |     100 |                   
       statistic.ts           |       0 |        0 |       0 |       0 | 14-77             
