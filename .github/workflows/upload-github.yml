@@ -1,6 +1,7 @@
 name: Upload to Github
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - 'release/**'
@@ -13,8 +14,9 @@ jobs:
       - uses: actions/checkout@v2
       - name: quality gate
         run: |
-        npm prune && npm i
-        npm run test:coverage
+          npm prune
+          npm i
+          npm run test:coverage
       - name: Deploy to Github
         if: "contains(github.event.head_commit.message, 'Release')"
         env:
@@ -26,4 +28,4 @@ jobs:
           echo "@huluvu424242:registry=https://npm.pkg.github.com" >> .npmrc
           npm publish  --access=public
 
-
+###

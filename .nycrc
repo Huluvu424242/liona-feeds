@@ -4,10 +4,11 @@
   "check-coverage": true,
   "exclude": [
     "**/*.spec.*",
-    "coverage/**"
+    "coverage/**",
+    "dist/**"
   ],
-  "branches": 10,
-  "lines": 10,
-  "functions": 10,
-  "statements": 10
+  "branches": 30,
+  "lines": 30,
+  "functions": 30,
+  "statements": 30
 }
