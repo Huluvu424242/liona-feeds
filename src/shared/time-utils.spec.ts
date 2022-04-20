@@ -11,7 +11,7 @@ describe('Time Utils:', () => {
     });
 
     it('newDate liefert in etwa die aktuelle Zeit von new Date()', () => {
-        const now: Date =  new TimeUtils().newDate();
+        const now: Date = new TimeUtils().newDate();
         const jetzt: Date = new Date();
         expect(jetzt.toDateString()).to.eq(now.toDateString());
     });

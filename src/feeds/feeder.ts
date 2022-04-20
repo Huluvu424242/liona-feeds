@@ -7,13 +7,14 @@ import {Cleaner} from "./cleaner";
 import {Statistic} from "./statistic";
 import {logService} from "../shared/log-service";
 import {FeedMetadata, StatisticData} from "./metadata";
+import {TimeUtils} from "../shared/time-utils";
 
 
 class Feeder {
 
-    protected feeds: Map<string, FeedMetadata> = new Map();
+    protected readonly feeds: Map<string, FeedMetadata> = new Map();
 
-    protected cleaner: Cleaner = new Cleaner(this.feeds); // selbststartend
+    protected cleaner: Cleaner = new Cleaner(this.feeds);
     protected statistic: Statistic = new Statistic(this.feeds);
 
     constructor() {
@@ -55,7 +56,7 @@ class Feeder {
             feedData = this.feeds.get(key) as FeedMetadata;
             this.logMetadata("Metadaten Alt", feedData);
             // Log lastRequest
-            feedData.lastRequested = new Date();
+            feedData.lastRequested = new TimeUtils().newDate();
             // Wechsel Statistik schreiben
             if (withStatistic !== feedData.withStatistic) {
                 feedData.withStatistic = withStatistic;
@@ -63,7 +64,7 @@ class Feeder {
             this.logMetadata("Metadaten Neu", feedData);
         } else {
             feedData = {
-                lastRequested: new Date(),
+                lastRequested: new TimeUtils().newDate(),
                 url: url,
                 period: DEFAULT_PERIOD,
                 withStatistic: withStatistic,
@@ -85,7 +86,7 @@ class Feeder {
             feedData = this.feeds.get(key) as FeedMetadata;
             this.logMetadata("Metadaten Alt", feedData);
             // Log lastRequested
-            feedData.lastRequested = new Date();
+            feedData.lastRequested = new TimeUtils().newDate();
             // Wechsel Statistik schreiben
             if (withStatistic !== feedData.withStatistic) {
                 feedData.withStatistic = withStatistic;
@@ -99,7 +100,7 @@ class Feeder {
             this.logMetadata("Metadaten Neu", feedData);
         } else {
             feedData = {
-                lastRequested: new Date(),
+                lastRequested: new TimeUtils().newDate(),
                 url: url,
                 period: period,
                 withStatistic: withStatistic,
@@ -117,27 +118,34 @@ class Feeder {
         logService.debugMessage("Create periodic fetcher for " + url + " with key " + key);
         const feed$: Observable<AxiosResponse> = timer(0, period).pipe(
             tap(() => {
-                console.log("Kontakte " + url + " für " + key);
+                console.log(`Kontakte ${url} für ${key}`);
                 this.statistic.feedWasContacted(key);
             }),
             switchMap(() => from(axios.get(url)).pipe(catchError(() => EMPTY)))
         );
 
-        return feed$.subscribe(
-            (feedResponse: AxiosResponse) => {
-                if (feedResponse.status != 200) {
-                    logService.errorMessage("", new Error(`status code ${feedResponse.status}`));
-                    return;
+        return feed$.subscribe({
+                next: (feedResponse: AxiosResponse) => {
+                    if (feedResponse.status != 200) {
+                        logService.errorMessage("", new Error(`status code ${feedResponse.status}`));
+                        return;
+                    }
+                    try {
+                        let parser = new FeedMe(true);
+                        parser.end(feedResponse.data);
+                        const feed = parser.done() as Feed;
+                        this.statistic.feedResponseWasOK(key);
+                        this.speichereResponsedaten(key, feed);
+                    }catch(error){
+                        logService.errorMessage("", new Error(`Feed Parser failed with: ${error}`));
+                    }
+                },
+                error: (error) => {
+                    logService.errorMessage("", new Error(`Response failed with: ${error}`));
+                },
+                complete: () => {
+                    logService.errorMessage(`Feed complete for ${url} (${key})`);
                 }
-                let parser = new FeedMe(true);
-                parser.end(feedResponse.data);
-                const feed = parser.done() as Feed;
-                this.statistic.feedResponseWasOK(key);
-                this.speichereResponsedaten(key, feed);
-            }, (error) => {
-                logService.errorMessage("", new Error(`Response failed with: ${error}`));
-            }, () => {
-                logService.errorMessage("Feed complete for " + url + "(" + key + ")");
             }
         );
     };
@@ -147,7 +155,7 @@ class Feeder {
         const metaData: FeedMetadata = this.feeds.get(key) as FeedMetadata;
         if (metaData) {
             // this.LOG.logDebug("Feed Data: " + JSON.stringify(feed));
-            logService.debugMessage("Data received for : " + metaData.url);
+            logService.debugMessage(`Data received for : ${metaData.url}`);
             metaData.data = feed;
         } else {
             logService.debugMessage("Keine Metadaten zur Anfrage gefunden");
