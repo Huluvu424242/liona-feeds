@@ -26,5 +26,3 @@ jobs:
           echo "registry=https://npm.pkg.github.com/huluvu424242" >> .npmrc
           echo "@huluvu424242:registry=https://npm.pkg.github.com" >> .npmrc
           npm publish  --access=public
-
-
