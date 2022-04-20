@@ -12,6 +12,7 @@
     "dist/"
   ],
   "scripts": {
+    "start": "node demo/server.js",
     "lint": "eslint",
     "check": "tsc --noEmit",
     "build": "parcel build src/index.ts",
