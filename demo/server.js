@@ -1,5 +1,5 @@
 const express = require('express');
-const feeder = require('../dist/cjs');
+const feeder = require('../dist/index');
 const PORT = process.env.PORT || 5000;
 
 const demoUrl = 'https://www.zdf.de/rss/zdf/nachrichten';
