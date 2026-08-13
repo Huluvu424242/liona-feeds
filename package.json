@@ -60,15 +60,15 @@
     "@parcel/transformer-typescript-types": "2.4.1",
     "@parcel/validator-typescript": "2.4.1",
     "express": "4.17.3",
-    "mocha": "9.2.2",
+    "mocha": "11.8.0",
     "chai": "4.3.6",
     "ts-node": "10.7.0",
     "sinon": "13.0.1",
     "sinon-chai": "3.7.0",
-    "nyc": "15.1.0",
+    "nyc": "18.0.0",
     "@istanbuljs/nyc-config-typescript": "1.0.2",
     "tap-nyc": "1.0.3",
     "marble-test": "3.1.1",
-    "@pact-foundation/pact": "10.4.1"
+    "@pact-foundation/pact": "17.1.2"
   }
 }
