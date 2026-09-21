@@ -54,7 +54,7 @@
     "@types/chai": "4.3.0",
     "@types/sinon": "10.0.11",
     "@types/sinon-chai": "3.2.8",
-    "parcel": "2.4.1",
+    "parcel": "2.16.4",
     "@parcel/packager-ts": "^2.4.1",
     "@parcel/transformer-typescript-tsc": "2.4.1",
     "@parcel/transformer-typescript-types": "2.4.1",
